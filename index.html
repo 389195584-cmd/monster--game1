@@ -1,187 +1,273 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>单词怪兽 - 万圣节进化版</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>单词怪兽·万圣版</title>
 <style>
-  :root{--bg:#1a1a3e;--accent:gold;--danger:#e94560}
-  body{margin:0;background:linear-gradient(135deg,#1a1a3e 0%,#0f0f2e 100%);color:#fff;font-family:system-ui,sans-serif;overflow-x:hidden;min-height:100vh}
-  .halloween-banner{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.3;background-image:radial-gradient(#ff7b00 1px,transparent 1px);background-size:40px 40px}
-  .halloween-emoji{position:fixed;font-size:24px;animation:float 6s ease-in-out infinite;z-index:0}
-  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
-  #app{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:12px;padding-bottom:80px}
-  .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;background:rgba(255,255,255,0.05);padding:10px;border-radius:12px;backdrop-filter:blur(5px)}
-  .coin{color:gold;font-weight:bold;font-size:18px}
-  .panel{background:rgba(255,255,255,0.05);border-radius:12px;padding:12px;margin-bottom:10px;backdrop-filter:blur(5px);border:1px solid rgba(255,255,255,0.08)}
-  .word-card{text-align:center;padding:20px 10px}
-  .word-en{font-size:32px;font-weight:bold;color:gold;margin-bottom:5px}
-  .word-phonetic{color:#aaa;font-size:14px;margin-bottom:15px}
-  .options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .opt-btn{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:12px;border-radius:10px;font-size:16px;cursor:pointer;transition:.2s}
-  .opt-btn:active{transform:scale(0.95);background:rgba(255,215,0,0.2)}
-  .action-btn{background:var(--accent);color:#1a1a3e;border:none;padding:6px 12px;border-radius:8px;font-weight:bold;cursor:pointer;font-size:12px}
-  .pet-area{text-align:center;margin:15px 0;position:relative}
-  .pet-emoji{font-size:80px;display:block;animation:bounce 2s infinite ease-in-out;filter:drop-shadow(0 10px 20px rgba(255,215,0,0.3))}
-  @keyframes bounce{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-15px) scale(1.05)}}
-  .slot-machine{text-align:center;padding:15px;background:rgba(255,215,0,0.05);border-radius:12px;margin-top:10px;border:1px dashed gold}
-  .slot-reels{font-size:40px;letter-spacing:10px;margin:10px 0}
-  .nav-bar{position:fixed;bottom:0;left:0;width:100%;display:flex;justify-content:space-around;background:rgba(26,26,62,0.95);padding:8px 0;border-top:1px solid rgba(255,255,255,0.1);z-index:10;backdrop-filter:blur(10px)}
-  .nav-item{background:none;border:none;color:#777;font-size:11px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
-  .nav-item .icon{font-size:20px}
-  .nav-item.active{color:gold}
-  .hidden{display:none!important}
-  .toast{position:fixed;top:30%;left:50%;transform:translate(-50%,-50%);font-size:24px;font-weight:bold;color:gold;text-shadow:0 0 20px gold;pointer-events:none;animation:toastAnim 1.4s forwards;z-index:995}
-  @keyframes toastAnim{0%{transform:translate(-50%,-50%) scale(0.4);opacity:0}25%{transform:translate(-50%,-50%) scale(1.1);opacity:1}100%{transform:translate(-50%,-70%) scale(1);opacity:0}}
-  #goalArea{margin-bottom:12px;text-align:center;background:rgba(255,215,0,0.05);padding:10px;border-radius:10px}
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
+body{background:#1a1a3e;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.app{width:100%;max-width:420px;padding:12px;padding-bottom:80px}
+.header{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.05);padding:10px 14px;border-radius:12px;margin-bottom:10px}
+.coin{color:gold;font-weight:bold}
+.card{background:rgba(255,255,255,.05);border-radius:14px;padding:16px;margin-bottom:10px;border:1px solid rgba(255,255,255,.08)}
+.word-en{font-size:30px;font-weight:bold;color:gold;text-align:center;margin-bottom:4px}
+.word-ph{font-size:13px;color:#aaa;text-align:center;margin-bottom:14px}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opt{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;padding:12px;border-radius:10px;font-size:15px;cursor:pointer;text-align:center}
+.opt:active{background:rgba(255,215,0,.15)}
+.pet-area{text-align:center;padding:10px 0}
+.pet-emoji{font-size:64px;display:block;animation:breathe 2s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.pet-name{font-size:14px;color:#ccc;margin-top:2px}
+.gacha-area{text-align:center;padding:10px}
+.slot-reels{font-size:44px;letter-spacing:12px;margin:10px 0}
+.btn-gacha{background:linear-gradient(135deg,#e94560,#c23152);color:#fff;border:none;padding:12px 38px;border-radius:28px;font-size:16px;font-weight:bold;cursor:pointer;box-shadow:0 4px 15px rgba(233,69,96,.4)}
+.btn-gacha:active{transform:scale(.92)}
+.btn-sm{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;margin:2px}
+.nav{position:fixed;bottom:0;left:0;width:100%;display:flex;justify-content:space-around;background:rgba(26,26,62,.97);padding:8px 0;border-top:1px solid rgba(255,255,255,.08)}
+.nav-item{background:none;border:none;color:#777;font-size:11px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+.nav-item .icon{font-size:20px}
+.nav-item.active{color:gold}
+.hidden{display:none!important}
+.toast{position:fixed;top:30%;left:50%;transform:translate(-50%,-50%);font-size:22px;font-weight:bold;color:gold;text-shadow:0 0 20px gold;pointer-events:none;animation:toastFade 1.4s forwards;z-index:999}
+@keyframes toastFade{0%{transform:translate(-50%,-50%) scale(.4);opacity:0}25%{transform:translate(-50%,-50%) scale(1.1);opacity:1}100%{transform:translate(-50%,-70%) scale(1);opacity:0}}
 </style>
 </head>
 <body>
-<div class="halloween-banner"></div>
-<div id="app">
-  <div class="header">
-    <div>🪙 <span class="coin" id="coins">0</span> | 🎯 <span id="wordCount">0</span>/<span id="dailyGoal">20</span></div>
-    <div>保底: <span id="pityCount">0</span></div>
-  </div>
-
-  <div id="learnPanel" class="panel">
-    <div id="goalArea">
-      <div style="font-size:12px;color:#aaa;margin-bottom:4px">🎯 每日背词目标</div>
-      <div style="display:flex;gap:4px;justify-content:center;margin-bottom:4px">
-        <button class="action-btn" onclick="setDailyGoal(20)">20词</button>
-        <button class="action-btn" onclick="setDailyGoal(50)">50词</button>
-        <button class="action-btn" onclick="setDailyGoal(100)">100词</button>
-      </div>
-      <div style="display:flex;gap:4px;justify-content:center">
-        <input type="number" id="customGoalInput" placeholder="自定义" style="width:70px;padding:4px;border-radius:6px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:#fff;text-align:center">
-        <button class="action-btn" onclick="const v=parseInt(document.getElementById('customGoalInput').value);if(v>0)setDailyGoal(v)">确定</button>
-      </div>
-    </div>
-    
-    <div class="pet-area">
-      <span class="pet-emoji" id="mainPet">👻</span>
-      <div id="petMood" style="font-size:12px;color:#aaa">(新宠物等待抽卡...)</div>
-    </div>
-
-    <div class="word-card">
-      <div class="word-en" id="wEn">Loading...</div>
-      <div class="word-phonetic" id="wPh"></div>
-      <div class="options" id="opts"></div>
-    </div>
-  </div>
-
-  <div id="gachaPanel" class="panel hidden">
-    <div class="slot-machine">
-      <div style="font-size:18px;font-weight:bold;color:gold">🎰 老虎机抽卡</div>
-      <div class="slot-reels" id="slotReels">🎃 ❓ 👻</div>
-      <button class="action-btn" onclick="doGacha()" style="font-size:16px;padding:10px 30px">抽卡 (50🪙)</button>
-      <div id="gachaResult" style="margin-top:8px;font-size:14px"></div>
-    </div>
-  </div>
-
-  <div id="dexPanel" class="panel hidden">
-    <div style="font-weight:bold;margin-bottom:8px">📖 宠物图鉴 (<span id="unlockedCount">0</span>/8)</div>
-    <div id="dexGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px"></div>
-  </div>
+<div class="app">
+<div class="header">
+<div>🪙 <span class="coin" id="coinDisplay">0</span></div>
+<div>🎯 <span id="todayCount">0</span>/<span id="goalDisplay">20</span></div>
 </div>
 
-<div class="nav-bar">
-  <button class="nav-item active" onclick="switchTab('learn')"><span class="icon">📚</span>学习</button>
-  <button class="nav-item" onclick="switchTab('gacha')"><span class="icon">🎰</span>抽卡</button>
-  <button class="nav-item" onclick="switchTab('dex')"><span class="icon">📖</span>图鉴</button>
+<!-- 学习面板 -->
+<div id="learnPanel">
+<div class="card" style="text-align:center;margin-bottom:8px">
+<div style="font-size:12px;color:#aaa;margin-bottom:4px">🎯 每日目标</div>
+<div><button class="btn-sm" onclick="setGoal(20)">20</button><button class="btn-sm" onclick="setGoal(50)">50</button><button class="btn-sm" onclick="setGoal(100)">100</button></div>
+<input id="goalInput" type="number" placeholder="自定义" style="width:70px;padding:4px;border-radius:6px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);color:#fff;text-align:center;margin-top:4px">
+<button class="btn-sm" onclick="const v=parseInt(document.getElementById('goalInput').value);if(v>0)setGoal(v)">确定</button>
+</div>
+
+<div class="pet-area">
+<span class="pet-emoji" id="mainPet">👻</span>
+<div class="pet-name" id="petName">小幽灵</div>
+</div>
+
+<div class="card">
+<div class="word-en" id="wordEn">apple</div>
+<div class="word-ph" id="wordPh">/ˈæp.l/</div>
+<div class="options" id="optionsBox"></div>
+</div>
+</div>
+
+<!-- 抽卡面板 -->
+<div id="gachaPanel" class="hidden">
+<div class="card gacha-area">
+<div style="font-size:18px;font-weight:bold;color:gold;margin-bottom:6px">🎰 老虎机抽卡</div>
+<div class="slot-reels" id="slotReels">🎃 👻 🕷️</div>
+<button class="btn-gacha" onclick="doGacha()">抽卡 (50🪙)</button>
+<div id="gachaResult" style="margin-top:8px;font-size:14px;min-height:20px"></div>
+<div style="font-size:11px;color:#666;margin-top:4px">保底: <span id="pityDisplay">0</span>/50</div>
+</div>
+</div>
+
+<!-- 图鉴面板 -->
+<div id="dexPanel" class="hidden">
+<div class="card">
+<div style="font-weight:bold;margin-bottom:8px">📖 宠物图鉴 (<span id="unlockCount">0</span>/8)</div>
+<div id="dexGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px"></div>
+</div>
+</div>
+</div>
+
+<div class="nav">
+<button class="nav-item active" onclick="switchTab('learn')"><span class="icon">📚</span>学习</button>
+<button class="nav-item" onclick="switchTab('gacha')"><span class="icon">🎰</span>抽卡</button>
+<button class="nav-item" onclick="switchTab('dex')"><span class="icon">📖</span>图鉴</button>
 </div>
 
 <script>
-// 万圣节动态背景
-const halloweenEmojis=['🎃','👻','🕸️','🧛','🦇'];
-halloweenEmojis.forEach((e,i)=>{
-  const el=document.createElement('div');
-  el.className='halloween-emoji';
-  el.textContent=e;
-  el.style.left=(10+i*20)+'%';
-  el.style.bottom=(10+Math.random()*30)+'%';
-  el.style.animationDelay=(i*1.5)+'s';
-  document.body.appendChild(el);
-});
-
-// 数据
+// ===== 宠物数据 =====
 const PETS=[
-  {id:1,name:"小幽灵",emoji:"👻",rate:0.4},{id:2,name:"南瓜怪",emoji:"🎃",rate:0.3},
-  {id:3,name:"蜘蛛精",emoji:"🕷️",rate:0.15},{id:4,name:"吸血鬼",emoji:"🧛",rate:0.08},
-  {id:5,name:"蝙蝠",emoji:"🦇",rate:0.04},{id:6,name:"木乃伊",emoji:"🏺",rate:0.02},
-  {id:7,name:"狼人",emoji:"🐺",rate:0.008},{id:8,name:"死神",emoji:"💀",rate:0.002}
+{id:1,name:'小幽灵',emoji:'👻',rarity:'普通',prob:0.45},
+{id:2,name:'南瓜怪',emoji:'🎃',rarity:'普通',prob:0.27},
+{id:3,name:'蜘蛛精',emoji:'🕷️',rarity:'普通',prob:0.14},
+{id:4,name:'小蝙蝠',emoji:'🦇',rarity:'稀有',prob:0.065},
+{id:5,name:'吸血鬼',emoji:'🧛',rarity:'稀有',prob:0.045},
+{id:6,name:'冰霜狼',emoji:'🐺',rarity:'稀有',prob:0.018},
+{id:7,name:'幻影龙',emoji:'🐉',rarity:'史诗',prob:0.007},
+{id:8,name:'混沌神兽',emoji:'🦄',rarity:'传说',prob:0.003}
 ];
+
+// ===== 词库 =====
 const WORDS=[
-  {en:"apple",ph:"/ˈæp.l/",cn:"苹果"},
-  {en:"monster",ph:"/ˈmɒn.stər/",cn:"怪兽"},
-  {en:"happy",ph:"/ˈhæp.i/",cn:"快乐的"},
-  {en:"ghost",ph:"/ɡəʊst/",cn:"幽灵"},
-  {en:"pumpkin",ph:"/ˈpʌmp.kɪn/",cn:"南瓜"},
-  {en:"spider",ph:"/ˈspaɪ.dər/",cn:"蜘蛛"},
-  {en:"vampire",ph:"/ˈvæm.paɪər/",cn:"吸血鬼"},
-  {en:"bat",ph:"/bæt/",cn:"蝙蝠"},
-  {en:"mummy",ph:"/ˈmʌm.i/",cn:"木乃伊"},
-  {en:"werewolf",ph:"/ˈweə.wʊlf/",cn:"狼人"}
+{en:'apple',ph:'/ˈæp.l/',cn:'苹果'},
+{en:'book',ph:'/bʊk/',cn:'书'},
+{en:'cat',ph:'/kæt/',cn:'猫'},
+{en:'dog',ph:'/dɒɡ/',cn:'狗'},
+{en:'egg',ph:'/eɡ/',cn:'鸡蛋'},
+{en:'fish',ph:'/fɪʃ/',cn:'鱼'},
+{en:'ghost',ph:'/ɡəʊst/',cn:'幽灵'},
+{en:'happy',ph:'/ˈhæp.i/',cn:'快乐'},
+{en:'monster',ph:'/ˈmɒn.stər/',cn:'怪兽'},
+{en:'pumpkin',ph:'/ˈpʌmp.kɪn/',cn:'南瓜'},
+{en:'spider',ph:'/ˈspaɪ.dər/',cn:'蜘蛛'},
+{en:'vampire',ph:'/ˈvæm.paɪər/',cn:'吸血鬼'},
+{en:'bat',ph:'/bæt/',cn:'蝙蝠'},
+{en:'mummy',ph:'/ˈmʌm.i/',cn:'木乃伊'},
+{en:'werewolf',ph:'/ˈweə.wʊlf/',cn:'狼人'},
+{en:'witch',ph:'/wɪtʃ/',cn:'女巫'},
+{en:'cauldron',ph:'/ˈkɔːl.drən/',cn:'大锅'},
+{en:'broom',ph:'/bruːm/',cn:'扫帚'},
+{en:'candy',ph:'/ˈkæn.di/',cn:'糖果'},
+{en:'costume',ph:'/ˈkɒs.tjuːm/',cn:'服装'}
 ];
 
-let S=JSON.parse(localStorage.getItem('wm_save_v2')||'{"coins":0,"word":{today:0,total:0},"unlocked":[],"pity":0,"goal":20}');
-if(!S.word)S.word={today:0,total:0};
+// ===== 存档 =====
+let data=JSON.parse(localStorage.getItem('monster_halloween_v1')||'{}');
+if(!data.coins)data.coins=50;
+if(!data.today)data.today=0;
+if(!data.total)data.total=0;
+if(!data.goal)data.goal=20;
+if(!data.unlocked)data.unlocked=[1];
+if(!data.pity)data.pity=0;
 
-function save(){localStorage.setItem('wm_save_v2',JSON.stringify(S));updateUI()}
+function save(){
+localStorage.setItem('monster_halloween_v1',JSON.stringify(data));
+updateUI();
+}
+
+// ===== UI更新 =====
 function updateUI(){
-  document.getElementById('coins').textContent=S.coins;
-  document.getElementById('wordCount').textContent=S.word.today||0;
-  document.getElementById('dailyGoal').textContent=S.goal;
-  document.getElementById('pityCount').textContent=S.pity;
-  if(S.unlocked.length>0){
-    const p=PETS.find(x=>x.id===S.unlocked[0]);
-    document.getElementById('mainPet').textContent=p.emoji;
-    document.getElementById('petMood').textContent=`${p.name} 陪伴你学习~`;
-  }
-  renderDex();
+document.getElementById('coinDisplay').textContent=data.coins;
+document.getElementById('todayCount').textContent=data.today;
+document.getElementById('goalDisplay').textContent=data.goal;
+document.getElementById('pityDisplay').textContent=data.pity;
+document.getElementById('unlockCount').textContent=data.unlocked.length;
+// 宠物展示
+if(data.unlocked.length>0){
+let pid=data.unlocked[data.unlocked.length-1];
+let p=PETS.find(x=>x.id===pid);
+if(p){
+document.getElementById('mainPet').textContent=p.emoji;
+document.getElementById('petName').textContent=p.name+' ('+p.rarity+')';
 }
-function setDailyGoal(n){S.goal=n;save();showToast(`目标设为 ${n} 词!`)}
-function switchTab(t){
-  document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
-  event.target.closest('.nav-item').classList.add('active');
-  ['learnPanel','gachaPanel','dexPanel'].forEach(x=>document.getElementById(x).classList.add('hidden'));
-  if(t==='learn')document.getElementById('learnPanel').classList.remove('hidden');
-  if(t==='gacha')document.getElementById('gachaPanel').classList.remove('hidden');
-  if(t==='dex')document.getElementById('dexPanel').classList.remove('hidden');
 }
-function renderDex(){
-  document.getElementById('unlockedCount').textContent=S.unlocked.length;
-  let h='';PETS.forEach(p=>{
-    const o=S.unlocked.includes(p.id);
-    h+=`<div style="text-align:center;font-size:12px;background:rgba(255,255,255,0.03);padding:6px;border-radius:8px;border:${o?'1px solid gold':'1px solid rgba(255,255,255,0.1)'}">${o?p.emoji:'❓'}<br>${o?p.name:'???'}</div>`;
-  });
-  document.getElementById('dexGrid').innerHTML=h;
+renderDex();
 }
-function doGacha(){
-  if(S.coins<50){showToast('金币不足!');return}
-  S.coins-=50;S.pity++;
-  let r=Math.random(),pick=PETS[0];
-  for(const p of PETS){if(r<p.rate){pick=p;break}}
-  if(S.pity>=50){pick=PETS[Math.floor(Math.random()*PETS.length)];S.pity=0}
-  document.getElementById('slotReels').textContent=`🎰 ${pick.emoji} 🎰`;
-  if(!S.unlocked.includes(pick.id)){S.unlocked.push(pick.id);showToast(`获得新宠物 ${pick.name}!`)}
-  else{showToast(`${pick.name} (重复+10🪙)`);S.coins+=10}
-  save();document.getElementById('gachaResult').textContent=`抽到了 ${pick.name} ${pick.emoji}`;
-}
-function showToast(t){const e=document.createElement('div');e.className='toast';e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),1400)}
 
-// 学习逻辑
-let curWord=WORDS[0];
-function nextWord(){
-  curWord=WORDS[Math.floor(Math.random()*WORDS.length)];
-  document.getElementById('wEn').textContent=curWord.en;
-  document.getElementById('wPh').textContent=curWord.ph;
-  const opts=[curWord.cn];while(opts.length<4){const r=WORDS[Math.floor(Math.random()*WORDS.length)].cn;if(!opts.includes(r))opts.push(r)}
-  opts.sort(()=>Math.random()-0.5);
-  document.getElementById('opts').innerHTML=opts.map(o=>`<button class="opt-btn" onclick="ans(this,'${o}')">${o}</button>`).join('');
+// ===== 每日目标 =====
+function setGoal(n){
+data.goal=n;
+save();
+showToast('✅ 目标设为'+n+'词');
 }
-function ans(b,o){if(o===curWord.cn){S.coins+=5;S.word.today++;S.word.total++;showToast('+5🪙')}else{showToast('错啦!')}save();setTimeout(nextWord,400)}
-nextWord();updateUI();
+
+// ===== 学习逻辑 =====
+let currentWord=WORDS[0];
+
+function nextWord(){
+currentWord=WORDS[Math.floor(Math.random()*WORDS.length)];
+document.getElementById('wordEn').textContent=currentWord.en;
+document.getElementById('wordPh').textContent=currentWord.ph;
+// 生成选项
+let opts=[currentWord.cn];
+while(opts.length<4){
+let r=WORDS[Math.floor(Math.random()*WORDS.length)].cn;
+if(!opts.includes(r))opts.push(r);
+}
+opts.sort(()=>Math.random()-0.5);
+document.getElementById('optionsBox').innerHTML=opts.map(o=>'<div class="opt" onclick="checkAnswer(\''+o+'\')">'+o+'</div>').join('');
+}
+
+function checkAnswer(selected){
+if(selected===currentWord.cn){
+data.coins+=5;
+data.today++;
+data.total++;
+showToast('✅ 正确！+5🪙');
+}else{
+showToast('❌ 答案是：'+currentWord.cn);
+}
+save();
+setTimeout(nextWord,300);
+}
+
+// ===== 抽卡 =====
+function doGacha(){
+if(data.coins<50){
+showToast('❌ 金币不足！');
+return;
+}
+data.coins-=50;
+data.pity++;
+
+// 计算抽卡结果
+let rand=Math.random();
+let cumulative=0;
+let pick=PETS[0];
+for(let p of PETS){
+cumulative+=p.prob;
+if(rand<cumulative){pick=p;break;}
+}
+
+// 保底
+if(data.pity>=50){
+pick=PETS[Math.floor(Math.random()*PETS.length)];
+data.pity=0;
+}
+
+// 显示转盘
+document.getElementById('slotReels').textContent='🎰 '+pick.emoji+' 🎰';
+
+// 处理结果
+if(!data.unlocked.includes(pick.id)){
+data.unlocked.push(pick.id);
+showToast('🎉 获得新宠物：'+pick.name+'！');
+}else{
+let bonus=Math.floor(Math.random()*10)+5;
+data.coins+=bonus;
+showToast('💕 重复获得'+pick.name+'，返还'+bonus+'🪙');
+}
+
+save();
+document.getElementById('gachaResult').textContent='✨ 获得：'+pick.name+' '+pick.emoji;
+}
+
+// ===== 图鉴 =====
+function renderDex(){
+let h='';
+PETS.forEach(p=>{
+let owned=data.unlocked.includes(p.id);
+h+='<div style="text-align:center;font-size:12px;background:rgba(255,255,255,0.03);padding:6px;border-radius:8px;border:'+(owned?'1px solid gold':'1px solid rgba(255,255,255,0.1)')+'">'+
+(owned?p.emoji:'❓')+'<br>'+(owned?p.name:'???')+'</div>';
+});
+document.getElementById('dexGrid').innerHTML=h;
+}
+
+// ===== 导航切换 =====
+function switchTab(tab){
+document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
+event.target.closest('.nav-item').classList.add('active');
+document.getElementById('learnPanel').classList.toggle('hidden',tab!=='learn');
+document.getElementById('gachaPanel').classList.toggle('hidden',tab!=='gacha');
+document.getElementById('dexPanel').classList.toggle('hidden',tab!=='dex');
+}
+
+// ===== Toast提示 =====
+function showToast(msg){
+let el=document.createElement('div');
+el.className='toast';
+el.textContent=msg;
+document.body.appendChild(el);
+setTimeout(()=>el.remove(),1500);
+}
+
+// ===== 启动 =====
+updateUI();
+nextWord();
 </script>
 </body>
 </html>
