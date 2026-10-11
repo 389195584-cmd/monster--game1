@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>怪物背题小游戏</title>
+<style>
+  body { font-family: sans-serif; background: #f0f8ff; text-align: center; margin: 0; padding: 20px; }
+  .game-box { background: #fff; max-width: 400px; margin: 20px auto; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+  h1 { color: #333; }
+  .monster { font-size: 80px; margin: 20px; }
+  .question { font-size: 20px; margin: 20px 0; font-weight: bold; }
+  .options button { display: block; width: 100%; margin: 10px 0; padding: 12px; font-size: 16px; border: 2px solid #4CAF50; background: #fff; color: #333; border-radius: 5px; cursor: pointer; }
+  .options button:active { background: #e8f5e9; }
+  .score { margin-top: 15px; font-size: 18px; color: #ff5722; }
+  .result { font-size: 22px; margin: 20px 0; font-weight: bold; }
+</style>
+</head>
+<body>
+<div class="game-box">
+  <h1>👾 怪物背题</h1>
+  <div class="monster">👹</div>
+  <div class="question" id="qText">题目加载中...</div>
+  <div class="options" id="opts"></div>
+  <div class="score" id="score">得分: 0</div>
+  <div class="result" id="res"></div>
+</div>
+<script>
+  const questions = [
+    { q: "1+1=?", options: ["1", "2", "3", "4"], ans: 1 },
+    { q: "中国首都是？", options: ["上海", "北京", "广州", "深圳"], ans: 1 },
+    { q: "HTML全称？", options: ["超文本标记语言", "编程语言", "样式表", "数据库"], ans: 0 },
+    { q: "GitHub主要用途？", options: ["看视频", "代码托管", "购物", "聊天"], ans: 1 },
+    { q: "CSS作用？", options: ["结构", "样式", "逻辑", "数据"], ans: 1 }
+  ];
+  let idx = 0, score = 0;
+  const qText = document.getElementById("qText");
+  const opts = document.getElementById("opts");
+  const scoreEl = document.getElementById("score");
+  const res = document.getElementById("res");
+
+  function load() {
+    if (idx >= questions.length) {
+      qText.innerText = "游戏结束！";
+      opts.innerHTML = "";
+      res.innerText = "最终得分: " + score + " / " + questions.length;
+      return;
+    }
+    const cur = questions[idx];
+    qText.innerText = cur.q;
+    opts.innerHTML = "";
+    cur.options.forEach((o, i) => {
+      const b = document.createElement("button");
+      b.innerText = o;
+      b.onclick = () => {
+        if (i === cur.ans) score++;
+        idx++;
+        scoreEl.innerText = "得分: " + score;
+        load();
+      };
+      opts.appendChild(b);
+    });
+  }
+  load();
+</script>
+</body>
+</html>
