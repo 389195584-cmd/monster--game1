@@ -2,66 +2,83 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>怪物背题小游戏</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>宠物英语学习 - 千词版</title>
 <style>
-  body { font-family: sans-serif; background: #f0f8ff; text-align: center; margin: 0; padding: 20px; }
-  .game-box { background: #fff; max-width: 400px; margin: 20px auto; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-  h1 { color: #333; }
-  .monster { font-size: 80px; margin: 20px; }
-  .question { font-size: 20px; margin: 20px 0; font-weight: bold; }
-  .options button { display: block; width: 100%; margin: 10px 0; padding: 12px; font-size: 16px; border: 2px solid #4CAF50; background: #fff; color: #333; border-radius: 5px; cursor: pointer; }
-  .options button:active { background: #e8f5e9; }
-  .score { margin-top: 15px; font-size: 18px; color: #ff5722; }
-  .result { font-size: 22px; margin: 20px 0; font-weight: bold; }
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;}
+body{background:linear-gradient(145deg,#f7e9d7,#ecdcc5);min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:12px 8px 20px;}
+.container{max-width:420px;width:100%;background:rgba(255,248,235,0.95);border-radius:36px;padding:18px 16px 24px;box-shadow:0 12px 32px rgba(80,50,30,0.25);border:1px solid rgba(220,190,160,0.4);}
+h1{text-align:center;color:#5a3e2b;margin-bottom:12px;font-size:24px;}
+.card{background:#fff;border-radius:24px;padding:24px;margin:12px 0;text-align:center;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,0.08);transition:transform 0.2s;}
+.card:active{transform:scale(0.97);}
+.en{font-size:32px;font-weight:bold;color:#d35400;margin-bottom:8px;}
+.cn{font-size:20px;color:#555;}
+.btn{display:block;width:100%;padding:14px;border:none;border-radius:18px;background:#d35400;color:#fff;font-size:18px;margin-top:12px;cursor:pointer;}
+.btn:active{background:#b94300;}
+.progress{text-align:center;color:#777;margin-top:10px;font-size:14px;}
 </style>
 </head>
 <body>
-<div class="game-box">
-  <h1>👾 怪物背题</h1>
-  <div class="monster">👹</div>
-  <div class="question" id="qText">题目加载中...</div>
-  <div class="options" id="opts"></div>
-  <div class="score" id="score">得分: 0</div>
-  <div class="result" id="res"></div>
+<div class="container">
+<h1>🐾 宠物英语</h1>
+<div class="card" id="card" onclick="speak()">
+<div class="en" id="en">Loading...</div>
+<div class="cn" id="cn">加载中...</div>
+</div>
+<button class="btn" onclick="next()">下一个 ➡️</button>
+<div class="progress" id="progress"></div>
 </div>
 <script>
-  const questions = [
-    { q: "1+1=?", options: ["1", "2", "3", "4"], ans: 1 },
-    { q: "中国首都是？", options: ["上海", "北京", "广州", "深圳"], ans: 1 },
-    { q: "HTML全称？", options: ["超文本标记语言", "编程语言", "样式表", "数据库"], ans: 0 },
-    { q: "GitHub主要用途？", options: ["看视频", "代码托管", "购物", "聊天"], ans: 1 },
-    { q: "CSS作用？", options: ["结构", "样式", "逻辑", "数据"], ans: 1 }
-  ];
-  let idx = 0, score = 0;
-  const qText = document.getElementById("qText");
-  const opts = document.getElementById("opts");
-  const scoreEl = document.getElementById("score");
-  const res = document.getElementById("res");
-
-  function load() {
-    if (idx >= questions.length) {
-      qText.innerText = "游戏结束！";
-      opts.innerHTML = "";
-      res.innerText = "最终得分: " + score + " / " + questions.length;
-      return;
-    }
-    const cur = questions[idx];
-    qText.innerText = cur.q;
-    opts.innerHTML = "";
-    cur.options.forEach((o, i) => {
-      const b = document.createElement("button");
-      b.innerText = o;
-      b.onclick = () => {
-        if (i === cur.ans) score++;
-        idx++;
-        scoreEl.innerText = "得分: " + score;
-        load();
-      };
-      opts.appendChild(b);
-    });
-  }
-  load();
+const words=[
+{en:"fossil",cn:"化石"},{en:"giraffe",cn:"长颈鹿"},{en:"hyena",cn:"鬣狗"},{en:"ibex",cn:"野山羊"},{en:"jackal",cn:"豺"},
+{en:"lemur",cn:"狐猴"},{en:"mantis",cn:"螳螂"},{en:"newt",cn:"蝾螈"},{en:"otter",cn:"水獭"},{en:"puma",cn:"美洲狮"},
+{en:"rhino",cn:"犀牛"},{en:"sloth",cn:"树懒"},{en:"tapir",cn:"貘"},{en:"urchin",cn:"海胆"},{en:"vixen",cn:"雌狐"},
+{en:"weasel",cn:"黄鼠狼"},{en:"yak",cn:"牦牛"},{en:"alpaca",cn:"羊驼"},{en:"badger",cn:"獾"},{en:"coyote",cn:"郊狼"},
+{en:"dolphin",cn:"海豚"},{en:"ferret",cn:"雪貂"},{en:"gerbil",cn:"沙鼠"},{en:"hedgehog",cn:"刺猬"},{en:"impala",cn:"黑斑羚"},
+{en:"jellyfish",cn:"水母"},{en:"kiwi",cn:"猕猴桃"},{en:"llama",cn:"美洲驼"},{en:"manatee",cn:"海牛"},{en:"narwhal",cn:"独角鲸"},
+{en:"ocelot",cn:"虎猫"},{en:"penguin",cn:"企鹅"},{en:"quokka",cn:"短尾矮袋鼠"},{en:"raccoon",cn:"浣熊"},{en:"seahorse",cn:"海马"},
+{en:"toucan",cn:"巨嘴鸟"},{en:"vulture",cn:"秃鹫"},{en:"walrus",cn:"海象"},{en:"xerus",cn:"非洲地松鼠"},{en:"zebra",cn:"斑马"},
+{en:"almond",cn:"杏仁"},{en:"broccoli",cn:"西兰花"},{en:"celery",cn:"芹菜"},{en:"daikon",cn:"白萝卜"},{en:"endive",cn:"菊苣"},
+{en:"fennel",cn:"茴香"},{en:"garlic",cn:"大蒜"},{en:"horseradish",cn:"辣根"},{en:"jalapeno",cn:"墨西哥辣椒"},{en:"kale",cn:"羽衣甘蓝"},
+{en:"lettuce",cn:"生菜"},{en:"mushroom",cn:"蘑菇"},{en:"nori",cn:"海苔"},{en:"okra",cn:"秋葵"},{en:"parsnip",cn:"欧洲萝卜"},
+{en:"quinoa",cn:"藜麦"},{en:"radicchio",cn:"红菊苣"},{en:"spinach",cn:"菠菜"},{en:"turnip",cn:"芜菁"},{en:"wasabi",cn:"芥末"},
+{en:"avocado",cn:"鳄梨"},{en:"blueberry",cn:"蓝莓"},{en:"cranberry",cn:"蔓越莓"},{en:"durian",cn:"榴莲"},{en:"elderberry",cn:"接骨木莓"},
+{en:"fig",cn:"无花果"},{en:"guava",cn:"番石榴"},{en:"honeydew",cn:"蜜瓜"},{en:"jackfruit",cn:"菠萝蜜"},{en:"kiwifruit",cn:"奇异果"},
+{en:"lime",cn:"青柠"},{en:"mango",cn:"芒果"},{en:"nectarine",cn:"油桃"},{en:"olive",cn:"橄榄"},{en:"papaya",cn:"木瓜"},
+{en:"raspberry",cn:"覆盆子"},{en:"strawberry",cn:"草莓"},{en:"tangerine",cn:"柑橘"},{en:"watermelon",cn:"西瓜"},{en:"acorn",cn:"橡子"},
+{en:"butterfly",cn:"蝴蝶"},{en:"caterpillar",cn:"毛毛虫"},{en:"dragonfly",cn:"蜻蜓"},{en:"earthworm",cn:"蚯蚓"},{en:"firefly",cn:"萤火虫"},
+{en:"grasshopper",cn:"蚱蜢"},{en:"hummingbird",cn:"蜂鸟"},{en:"ladybug",cn:"瓢虫"},{en:"mosquito",cn:"蚊子"},{en:"scorpion",cn:"蝎子"},
+{en:"spider",cn:"蜘蛛"},{en:"termite",cn:"白蚁"},{en:"woodpecker",cn:"啄木鸟"},{en:"asteroid",cn:"小行星"},{en:"comet",cn:"彗星"},
+{en:"galaxy",cn:"星系"},{en:"meteor",cn:"流星"},{en:"nebula",cn:"星云"},{en:"planet",cn:"行星"},{en:"satellite",cn:"卫星"},
+{en:"telescope",cn:"望远镜"},{en:"uranus",cn:"天王星"},{en:"venus",cn:"金星"},{en:"mercury",cn:"水星"},{en:"jupiter",cn:"木星"},
+{en:"mars",cn:"火星"},{en:"neptune",cn:"海王星"},{en:"pluto",cn:"冥王星"},{en:"saturn",cn:"土星"},{en:"algebra",cn:"代数"},
+{en:"calculus",cn:"微积分"},{en:"geometry",cn:"几何"},{en:"trigonometry",cn:"三角学"},{en:"biology",cn:"生物学"},{en:"chemistry",cn:"化学"},
+{en:"physics",cn:"物理学"},{en:"astronomy",cn:"天文学"},{en:"geology",cn:"地质学"},{en:"psychology",cn:"心理学"},{en:"sociology",cn:"社会学"},
+{en:"philosophy",cn:"哲学"},{en:"history",cn:"历史"},{en:"literature",cn:"文学"},{en:"grammar",cn:"语法"},{en:"vocabulary",cn:"词汇"},
+{en:"pronunciation",cn:"发音"},{en:"adjective",cn:"形容词"},{en:"adverb",cn:"副词"},{en:"conjunction",cn:"连词"},{en:"interjection",cn:"感叹词"},
+{en:"noun",cn:"名词"},{en:"preposition",cn:"介词"},{en:"pronoun",cn:"代词"},{en:"verb",cn:"动词"},{en:"symphony",cn:"交响乐"},
+{en:"melody",cn:"旋律"},{en:"harmony",cn:"和声"},{en:"rhythm",cn:"节奏"},{en:"tempo",cn:"速度"},{en:"orchestra",cn:"管弦乐队"},
+{en:"piano",cn:"钢琴"},{en:"violin",cn:"小提琴"},{en:"cello",cn:"大提琴"},{en:"flute",cn:"长笛"},{en:"clarinet",cn:"单簧管"},
+{en:"trumpet",cn:"小号"},{en:"trombone",cn:"长号"},{en:"harp",cn:"竖琴"},{en:"drum",cn:"鼓"},{en:"canvas",cn:"画布"},
+{en:"palette",cn:"调色板"},{en:"brush",cn:"画笔"},{en:"easel",cn:"画架"},{en:"sculpture",cn:"雕塑"},{en:"pottery",cn:"陶器"},
+{en:"origami",cn:"折纸"},{en:"calligraphy",cn:"书法"},{en:"mosaic",cn:"马赛克"},{en:"fresco",cn:"壁画"},{en:"democracy",cn:"民主"},
+{en:"republic",cn:"共和国"},{en:"monarchy",cn:"君主制"},{en:"dictatorship",cn:"独裁"},{en:"federation",cn:"联邦"},{en:"constitution",cn:"宪法"},
+{en:"parliament",cn:"议会"},{en:"senate",cn:"参议院"},{en:"congress",cn:"国会"},{en:"cabinet",cn:"内阁"},{en:"ambassador",cn:"大使"},
+{en:"diplomat",cn:"外交官"},{en:"treaty",cn:"条约"},{en:"alliance",cn:"联盟"},{en:"sanction",cn:"制裁"},{en:"embargo",cn:"禁运"},
+{en:"tariff",cn:"关税"},{en:"subsidy",cn:"补贴"},{en:"budget",cn:"预算"},{en:"revenue",cn:"收入"},{en:"economy",cn:"经济"},
+{en:"inflation",cn:"通货膨胀"},{en:"deflation",cn:"通货紧缩"},{en:"recession",cn:"衰退"},{en:"depression",cn:"萧条"},{en:"dividend",cn:"股息"},
+{en:"interest",cn:"利息"},{en:"mortgage",cn:"抵押贷款"},{en:"equity",cn:"股权"},{en:"asset",cn:"资产"},{en:"liability",cn:"负债"},
+{en:"bankruptcy",cn:"破产"},{en:"audit",cn:"审计"},{en:"invoice",cn:"发票"},{en:"receipt",cn:"收据"},{en:"algorithm",cn:"算法"},
+{en:"database",cn:"数据库"},{en:"software",cn:"软件"},{en:"hardware",cn:"硬件"},{en:"network",cn:"网络"},{en:"server",cn:"服务器"},
+{en:"encryption",cn:"加密"},{en:"firewall",cn:"防火墙"},{en:"protocol",cn:"协议"},{en:"bandwidth",cn:"带宽"},{en:"volcano",cn:"火山"},
+{en:"earthquake",cn:"地震"},{en:"tsunami",cn:"海啸"},{en:"hurricane",cn:"飓风"},{en:"typhoon",cn:"台风"},{en:"tornado",cn:"龙卷风"},
+{en:"blizzard",cn:"暴风雪"},{en:"drought",cn:"干旱"},{en:"flood",cn:"洪水"},{en:"avalanche",cn:"雪崩"},{en:"oxygen",cn:"氧气"}
+];
+let idx=0;
+function show(){document.getElementById("en").innerText=words[idx].en;document.getElementById("cn").innerText=words[idx].cn;document.getElementById("progress").innerText=(idx+1)+"/"+words.length;}
+function next(){idx=(idx+1)%words.length;show();}
+function speak(){const t=words[idx].en;if('speechSynthesis' in window){const u=new SpeechSynthesisUtterance(t);u.lang='en-US';speechSynthesis.speak(u);}else{alert("浏览器不支持发音")}}
+show();
 </script>
 </body>
 </html>
