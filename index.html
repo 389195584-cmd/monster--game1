@@ -3,432 +3,525 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>怪物抽卡游戏</title>
+<title>怪物抽卡 - 完整版</title>
 <style>
-  :root {
-    --bg: #1a1a2e;
-    --primary: #e94560;
-    --secondary: #0f3460;
-    --text: #fff;
-  }
-  body {
-    margin: 0;
-    padding: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    overflow-x: hidden;
-    user-select: none;
-  }
-  .container {
-    max-width: 480px;
-    margin: 0 auto;
-    padding: 20px;
-    text-align: center;
-    min-height: 100vh;
-    box-sizing: border-box;
-  }
-  h1 {
-    font-size: 28px;
-    margin-bottom: 5px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-  }
-  .subtitle {
-    font-size: 14px;
-    color: #aaa;
-    margin-bottom: 20px;
-  }
-  /* 老虎机区域 */
-  .slot-machine {
-    background: rgba(255,255,255,0.05);
-    border-radius: 15px;
-    padding: 20px;
-    margin-bottom: 20px;
-    border: 2px solid var(--secondary);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  }
-  .slots {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    height: 120px;
-  }
-  .slot {
-    width: 90px;
-    height: 110px;
-    background: #fff;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 50px;
-    color: #333;
-    overflow: hidden;
-    position: relative;
-    border: 3px solid #ddd;
-    transition: transform 0.1s;
-  }
-  .slot.spinning {
-    animation: spin 0.5s linear infinite;
-  }
-  @keyframes spin {
-    0% { transform: translateY(-20px); opacity: 0.5; }
-    50% { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(20px); opacity: 0.5; }
-  }
-  .slot.match {
-    border-color: gold;
-    box-shadow: 0 0 20px gold;
-    animation: pulse 1s infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-  }
-  .btn {
-    background: var(--primary);
-    color: #fff;
-    border: none;
-    padding: 15px 40px;
-    font-size: 18px;
-    border-radius: 30px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.2s;
-    box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4);
-  }
-  .btn:active {
-    transform: scale(0.95);
-  }
-  .btn:disabled {
-    background: #555;
-    box-shadow: none;
-    cursor: not-allowed;
-  }
-  /* 宠物展示 */
-  .pet-display {
-    margin-top: 20px;
-    min-height: 200px;
-    position: relative;
-  }
-  .pet-card {
-    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-    border-radius: 15px;
-    padding: 20px;
-    border: 1px solid rgba(255,255,255,0.2);
-    display: none;
-    animation: fadeIn 0.5s;
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .pet-emoji {
-    font-size: 80px;
-    display: block;
-    margin-bottom: 10px;
-    animation: breathe 3s ease-in-out infinite;
-    position: relative;
-  }
-  @keyframes breathe {
-    0%, 100% { transform: scale(1) translateY(0); }
-    50% { transform: scale(1.05) translateY(-5px); }
-  }
-  .pet-emoji::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60%;
-    height: 10px;
-    background: rgba(0,0,0,0.2);
-    border-radius: 50%;
-    animation: shadow 3s ease-in-out infinite;
-  }
-  @keyframes shadow {
-    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.2; }
-    50% { transform: translateX(-50%) scale(0.9); opacity: 0.1; }
-  }
-  .pet-name {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  .pet-rarity {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    margin-bottom: 10px;
-  }
-  .rarity-common { background: #666; }
-  .rarity-rare { background: #0066cc; box-shadow: 0 0 10px #0066cc; }
-  .rarity-epic { background: #9900cc; box-shadow: 0 0 15px #9900cc; }
-  .rarity-legendary { background: #ff6600; box-shadow: 0 0 20px #ff6600; }
-  
-  .effect {
-    position: absolute;
-    pointer-events: none;
-    font-size: 30px;
-    animation: floatUp 1.5s forwards;
-  }
-  @keyframes floatUp {
-    0% { transform: translateY(0) scale(1); opacity: 1; }
-    100% { transform: translateY(-50px) scale(1.5); opacity: 0; }
-  }
-  
-  .result-text {
-    font-size: 20px;
-    margin-top: 10px;
-    font-weight: bold;
-    min-height: 30px;
-  }
-  .coins {
-    font-size: 16px;
-    color: gold;
-    margin-bottom: 10px;
-  }
-  
-  /* 图鉴 */
-  .dex {
-    margin-top: 30px;
-    text-align: left;
-  }
-  .dex h3 {
-    border-bottom: 2px solid var(--secondary);
-    padding-bottom: 5px;
-  }
-  .dex-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin-top: 10px;
-  }
-  .dex-item {
-    background: rgba(255,255,255,0.05);
-    border-radius: 8px;
-    padding: 10px 5px;
-    text-align: center;
-    font-size: 12px;
-    border: 1px solid rgba(255,255,255,0.1);
-  }
-  .dex-item.unlocked {
-    border-color: gold;
-    background: rgba(255,215,0,0.1);
-  }
-  .dex-emoji {
-    font-size: 30px;
-    display: block;
-  }
-  
-  /* 稀有宠物特效 */
-  .fx-fire { color: #ff4500; text-shadow: 0 0 20px #ff4500; }
-  .fx-ice { color: #00bfff; text-shadow: 0 0 20px #00bfff; }
-  .fx-thunder { color: #ffd700; text-shadow: 0 0 20px #ffd700; }
-  .fx-magic { color: #ff00ff; text-shadow: 0 0 20px #ff00ff; }
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+body{background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);color:#fff;min-height:100vh;overflow-x:hidden}
+.container{max-width:480px;margin:0 auto;padding:16px;text-align:center}
+h1{font-size:26px;margin:10px 0 4px;text-shadow:0 2px 10px rgba(255,215,0,0.3)}
+.subtitle{font-size:13px;color:#aaa;margin-bottom:16px}
+.coins{font-size:18px;color:gold;margin-bottom:12px;background:rgba(255,215,0,0.1);padding:8px 16px;border-radius:20px;display:inline-block}
+/* 老虎机 */
+.slot-machine{background:rgba(255,255,255,0.06);border-radius:20px;padding:20px;margin-bottom:16px;border:2px solid rgba(255,215,0,0.2)}
+.slots{display:flex;justify-content:center;gap:12px;margin-bottom:18px;height:130px}
+.slot{width:100px;height:120px;background:#1a1a3e;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:55px;border:3px solid #444;transition:all 0.3s;position:relative}
+.slot.spin1{animation:spinSlot1 0.1s infinite}
+.slot.spin2{animation:spinSlot2 0.09s infinite}
+.slot.spin3{animation:spinSlot3 0.07s infinite}
+@keyframes spinSlot1{0%{transform:translateY(-15px)}100%{transform:translateY(15px)}}
+@keyframes spinSlot2{0%{transform:translateY(-12px)}100%{transform:translateY(12px)}}
+@keyframes spinSlot3{0%{transform:translateY(-10px)}100%{transform:translateY(10px)}}
+.slot.match{border-color:gold;box-shadow:0 0 30px gold;animation:pulseGold 0.8s infinite}
+@keyframes pulseGold{0%,100%{box-shadow:0 0 20px gold}50%{box-shadow:0 0 40px gold}}
+.slot.stop1{transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1)}
+.slot.stop2{transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1)}
+.slot.stop3{transition:all 0.5s cubic-bezier(0.22,1,0.36,1)}
+.btn{background:linear-gradient(135deg,#e94560,#c23152);color:#fff;border:none;padding:14px 44px;font-size:18px;border-radius:30px;cursor:pointer;font-weight:bold;box-shadow:0 4px 20px rgba(233,69,96,0.4);transition:all 0.2s;touch-action:manipulation}
+.btn:active{transform:scale(0.93)}
+.btn:disabled{background:#555;box-shadow:none;cursor:not-allowed}
+.result-text{font-size:18px;margin-top:12px;min-height:30px;font-weight:bold}
+/* 宠物卡片 */
+.pet-display{margin-top:16px;min-height:180px}
+.pet-card{background:linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02));border-radius:20px;padding:20px;border:1px solid rgba(255,255,255,0.15);display:none;animation:fadeIn 0.5s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.pet-emoji{font-size:70px;display:block;margin-bottom:6px;cursor:pointer;transition:transform 0.2s;position:relative}
+.pet-emoji:active{transform:scale(0.9)}
+.pet-name{font-size:22px;font-weight:bold;margin-bottom:4px}
+.pet-rarity{display:inline-block;padding:3px 14px;border-radius:20px;font-size:12px;margin-bottom:8px}
+.rarity-common{background:#666}
+.rarity-rare{background:#0066cc;box-shadow:0 0 10px #0066cc}
+.rarity-epic{background:#9900cc;box-shadow:0 0 15px #9900cc}
+.rarity-legendary{background:#ff6600;box-shadow:0 0 20px #ff6600}
+.favor-text{font-size:13px;color:#ff99cc;margin-top:4px}
+.hearts{position:absolute;pointer-events:none;font-size:24px;animation:heartFloat 1s forwards}
+@keyframes heartFloat{0%{transform:translateY(0) scale(0.5);opacity:1}100%{transform:translateY(-60px) scale(1.5);opacity:0}}
+/* 图鉴 */
+.dex{margin-top:24px;text-align:left}
+.dex h3{border-bottom:2px solid rgba(255,255,255,0.1);padding-bottom:6px;font-size:16px}
+.dex-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}
+.dex-item{background:rgba(255,255,255,0.04);border-radius:10px;padding:8px 4px;text-align:center;font-size:11px;border:1px solid rgba(255,255,255,0.06)}
+.dex-item.unlocked{border-color:gold;background:rgba(255,215,0,0.1)}
+.dex-emoji{font-size:28px;display:block}
+/* 商店 */
+.shop{display:none;margin-top:16px;text-align:left}
+.shop-item{background:rgba(255,255,255,0.06);border-radius:12px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.shop-btn{padding:6px 16px;border-radius:20px;border:none;background:gold;color:#000;font-weight:bold;cursor:pointer;font-size:13px}
+/* 设置 */
+.settings{display:none;margin-top:16px}
+.setting-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:10px 20px;border-radius:12px;cursor:pointer;margin:4px;font-size:14px}
+/* 导航 */
+.nav{display:flex;justify-content:space-around;margin-top:20px;padding:10px 0;border-top:1px solid rgba(255,255,255,0.1)}
+.nav-btn{background:none;border:none;color:#888;font-size:14px;padding:8px 12px;cursor:pointer;border-radius:10px;transition:all 0.2s}
+.nav-btn.active{color:gold;background:rgba(255,215,0,0.1)}
+/* 特效 */
+.effect-particle{position:fixed;pointer-events:none;font-size:28px;animation:particleFly 1.2s forwards}
+@keyframes particleFly{0%{transform:translate(0,0) scale(0.5);opacity:1}100%{transform:translate(var(--tx),var(--ty)) scale(1.5);opacity:0}}
+.bonus-text{position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);font-size:36px;font-weight:bold;color:gold;text-shadow:0 0 30px gold;pointer-events:none;animation:bonusPop 1.5s forwards}
+@keyframes bonusPop{0%{transform:translate(-50%,-50%) scale(0.5);opacity:0}30%{transform:translate(-50%,-50%) scale(1.2);opacity:1}100%{transform:translate(-50%,-80%) scale(1);opacity:0}}
 </style>
 </head>
 <body>
 <div class="container">
   <h1>🎰 怪物抽卡机</h1>
-  <div class="subtitle">3格相同出稀有宠物！</div>
-  <div class="coins">💰 抽卡币: <span id="coins">10</span></div>
+  <div class="subtitle">收集10种宠物 · 点击宠物加好感</div>
+  <div class="coins">💰 <span id="coins">15</span> 币</div>
   
-  <div class="slot-machine">
+  <div class="slot-machine" id="tabMain">
     <div class="slots">
       <div class="slot" id="s1">❓</div>
       <div class="slot" id="s2">❓</div>
       <div class="slot" id="s3">❓</div>
     </div>
-    <button class="btn" id="drawBtn" onclick="draw()">🎰 抽卡 (消耗1币)</button>
+    <button class="btn" id="drawBtn" onclick="startDraw()">🎰 抽卡 (消耗1币)</button>
     <div class="result-text" id="result"></div>
+    <div style="font-size:12px;color:#666;margin-top:6px">保底: 已抽 <span id="pityCount">0</span> 次</div>
   </div>
   
-  <div class="pet-display" id="petDisplay">
-    <!-- 宠物卡片动态生成 -->
+  <div class="shop" id="tabShop">
+    <h3>🏪 商店</h3>
+    <div class="shop-item"><span>🎫 双倍券 (下次抽卡双倍掉落)</span><button class="shop-btn" onclick="buyItem('double')">5币</button></div>
+    <div class="shop-item"><span>🔄 保底重置卡 (重置保底计数)</span><button class="shop-btn" onclick="buyItem('reset')">3币</button></div>
+    <div style="font-size:12px;color:#aaa;margin-top:8px">持有: 🎫 <span id="itemDouble">0</span> | 🔄 <span id="itemReset">0</span></div>
   </div>
   
-  <div class="dex">
-    <h3>📖 宠物图鉴 (<span id="unlockedCount">0</span>/10)</h3>
+  <div class="settings" id="tabSettings">
+    <h3>⚙️ 设置</h3>
+    <button class="setting-btn" onclick="exportSave()">📤 导出存档</button>
+    <button class="setting-btn" onclick="importSave()">📥 导入存档</button>
+    <div style="font-size:12px;color:#aaa;margin-top:8px">点击宠物加好感，满10级进化</div>
+  </div>
+  
+  <div class="pet-display" id="petDisplay"></div>
+  
+  <div class="dex" id="tabDex">
+    <h3>📖 图鉴 (<span id="unlockedCount">0</span>/10) <span id="dexBonus" style="font-size:12px;color:gold;float:right"></span></h3>
     <div class="dex-grid" id="dexGrid"></div>
+  </div>
+  
+  <div class="nav">
+    <button class="nav-btn active" onclick="switchTab('main',this)">🎰抽卡</button>
+    <button class="nav-btn" onclick="switchTab('shop',this)">🏪商店</button>
+    <button class="nav-btn" onclick="switchTab('dex',this)">📖图鉴</button>
+    <button class="nav-btn" onclick="switchTab('settings',this)">⚙️设置</button>
   </div>
 </div>
 
 <script>
-const pets = {
+// ===== 音效系统 =====
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx;
+function initAudio(){
+  if(!audioCtx) audioCtx = new AudioCtx();
+}
+function playTone(freq,dur,type='sine',vol=0.15){
+  try{
+    initAudio();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+dur);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime+dur);
+  }catch(e){}
+}
+function sfxClick(){ playTone(800,0.08,'square',0.08); }
+function sfxSpin(){ playTone(300+Math.random()*400,0.03,'sawtooth',0.05); }
+function sfxWin(){ 
+  playTone(523,0.15,'sine',0.12);
+  setTimeout(()=>playTone(659,0.15,'sine',0.12),100);
+  setTimeout(()=>playTone(784,0.2,'sine',0.12),200);
+}
+function sfxHeart(){ playTone(880,0.2,'sine',0.1); setTimeout(()=>playTone(1100,0.3,'sine',0.1),150); }
+function sfxCoin(){ playTone(1200,0.06,'sine',0.08); }
+
+// ===== 宠物数据 =====
+const PETS = {
   common: [
-    { id: 1, name: '小史莱姆', emoji: '🟢', rarity: 'common', desc: '软绵绵的绿色小家伙' },
-    { id: 2, name: '小蝙蝠', emoji: '🦇', rarity: 'common', desc: '怕光的夜行客' },
-    { id: 3, name: '小蘑菇', emoji: '🍄', rarity: 'common', desc: '森林里的红帽精灵' },
-    { id: 4, name: '小幽灵', emoji: '👻', rarity: 'common', desc: '爱恶作剧的透明魂' },
+    {id:1,name:'小史莱姆',emoji:'🟢',rarity:'common',desc:'软绵绵的绿色小家伙'},
+    {id:2,name:'小蝙蝠',emoji:'🦇',rarity:'common',desc:'怕光的夜行客'},
+    {id:3,name:'小蘑菇',emoji:'🍄',rarity:'common',desc:'森林里的红帽精灵'},
+    {id:4,name:'小幽灵',emoji:'👻',rarity:'common',desc:'爱恶作剧的透明魂'},
   ],
   rare: [
-    { id: 5, name: '冰霜狼', emoji: '🐺', rarity: 'rare', desc: '踏雪无痕的寒冰之狼', effect: 'fx-ice', skill: '❄️冰冻吐息' },
-    { id: 6, name: '雷霆鹰', emoji: '🦅', rarity: 'rare', desc: '翱翔九天的雷电之翼', effect: 'fx-thunder', skill: '⚡雷霆一击' },
-    { id: 7, name: '烈焰虎', emoji: '🐯', rarity: 'rare', desc: '威震山林的火焰猛虎', effect: 'fx-fire', skill: '🔥烈焰爪击' },
+    {id:5,name:'冰霜狼',emoji:'🐺',rarity:'rare',desc:'踏雪无痕的寒冰之狼'},
+    {id:6,name:'雷霆鹰',emoji:'🦅',rarity:'rare',desc:'翱翔九天的雷电之翼'},
+    {id:7,name:'烈焰虎',emoji:'🐯',rarity:'rare',desc:'威震山林的火焰猛虎'},
   ],
   epic: [
-    { id: 8, name: '幻影龙', emoji: '🐉', rarity: 'epic', desc: '穿梭虚实的神秘巨龙', effect: 'fx-magic', skill: '✨空间扭曲' },
-    { id: 9, name: '圣光狮', emoji: '🦁', rarity: 'epic', desc: '沐浴圣光的金色雄狮', effect: 'fx-magic', skill: '🌟神圣审判' },
+    {id:8,name:'幻影龙',emoji:'🐉',rarity:'epic',desc:'穿梭虚实的神秘巨龙'},
+    {id:9,name:'圣光狮',emoji:'🦁',rarity:'epic',desc:'沐浴圣光的金色雄狮'},
   ],
   legendary: [
-    { id: 10, name: '混沌神兽', emoji: '🦄', rarity: 'legendary', desc: '掌控万象的终极存在', effect: 'fx-magic', skill: '🌌混沌归元' },
+    {id:10,name:'混沌神兽',emoji:'🦄',rarity:'legendary',desc:'掌控万象的终极存在'},
   ]
 };
+const ALL_PETS = [...PETS.common,...PETS.rare,...PETS.epic,...PETS.legendary];
 
-const allPets = [...pets.common, ...pets.rare, ...pets.epic, ...pets.legendary];
-let coins = 10;
-let unlocked = new Set();
-let isSpinning = false;
+// ===== 存档 =====
+let S = loadSave();
 
-// 初始化图鉴
-function initDex() {
+function defaultSave(){
+  return {
+    coins: 15,
+    unlocked: [],
+    favor: {},
+    pity: 0,
+    items: { double: 0, reset: 0 },
+    lastVisit: Date.now(),
+    totalDraws: 0,
+  };
+}
+
+function loadSave(){
+  try{
+    const raw = localStorage.getItem('petSave');
+    if(raw){
+      const d = JSON.parse(raw);
+      // 合并默认值
+      const def = defaultSave();
+      for(let k in def) if(d[k]===undefined) d[k]=def[k];
+      // 处理离线收益
+      const elapsed = Math.floor((Date.now() - d.lastVisit)/60000);
+      if(elapsed>1 && elapsed<1440){
+        const bonus = Math.min(Math.floor(elapsed/2),20);
+        if(bonus>0){
+          d.coins += bonus;
+          setTimeout(()=>showBonus(`⏰ 离线 ${elapsed}分钟，获得 ${bonus} 币!`),500);
+        }
+      }
+      d.lastVisit = Date.now();
+      return d;
+    }
+  }catch(e){}
+  return defaultSave();
+}
+
+function save(){
+  S.lastVisit = Date.now();
+  localStorage.setItem('petSave',JSON.stringify(S));
+}
+
+function showBonus(text){
+  const el = document.createElement('div');
+  el.className = 'bonus-text';
+  el.textContent = text;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),1500);
+}
+
+// ===== UI初始化 =====
+function initDex(){
   const grid = document.getElementById('dexGrid');
-  allPets.forEach(p => {
-    const item = document.createElement('div');
-    item.className = 'dex-item';
-    item.id = `dex-${p.id}`;
-    item.innerHTML = `<span class="dex-emoji">❓</span><div>${p.name}</div>`;
-    grid.appendChild(item);
+  grid.innerHTML = '';
+  ALL_PETS.forEach(p=>{
+    const unlocked = S.unlocked.includes(p.id);
+    const div = document.createElement('div');
+    div.className = 'dex-item'+(unlocked?' unlocked':'');
+    div.id = 'dex-'+p.id;
+    div.innerHTML = `<span class="dex-emoji">${unlocked?p.emoji:'❓'}</span><div>${unlocked?p.name:'???'}</div>`;
+    grid.appendChild(div);
   });
+  updateDexCount();
 }
 
-function unlockPet(pet) {
-  if (!unlocked.has(pet.id)) {
-    unlocked.add(pet.id);
-    const item = document.getElementById(`dex-${pet.id}`);
-    item.classList.add('unlocked');
-    item.querySelector('.dex-emoji').textContent = pet.emoji;
-    document.getElementById('unlockedCount').textContent = unlocked.size;
+function updateDexCount(){
+  document.getElementById('unlockedCount').textContent = S.unlocked.length;
+  // 检查图鉴奖励
+  let bonusMsg = '';
+  const commons = PETS.common.filter(p=>S.unlocked.includes(p.id)).length;
+  const rares = PETS.rare.filter(p=>S.unlocked.includes(p.id)).length;
+  if(commons===PETS.common.length && !S._rewardCommon){
+    S._rewardCommon=true; S.coins+=5; bonusMsg='🎉 集齐普通宠物 +5币!';
   }
+  if(rares===PETS.rare.length && !S._rewardRare){
+    S._rewardRare=true; S.coins+=10; bonusMsg='🎉 集齐稀有宠物 +10币!';
+  }
+  document.getElementById('dexBonus').textContent = bonusMsg;
+  if(bonusMsg) setTimeout(()=>document.getElementById('dexBonus').textContent='',3000);
+  save();
 }
 
-function getRarityClass(r) {
-  return `rarity-${r}`;
-}
-function getRarityText(r) {
-  return { common: '普通', rare: '稀有', epic: '史诗', legendary: '传说' }[r];
+function updateUI(){
+  document.getElementById('coins').textContent = S.coins;
+  document.getElementById('pityCount').textContent = S.pity;
+  document.getElementById('itemDouble').textContent = S.items.double;
+  document.getElementById('itemReset').textContent = S.items.reset;
+  document.getElementById('drawBtn').disabled = S.coins<=0;
 }
 
-function showPet(pet, isNew) {
+// ===== 宠物展示 =====
+let currentPetId = null;
+
+function showPet(pet, isNew){
+  currentPetId = pet.id;
+  const fav = S.favor[pet.id] || 0;
+  const level = Math.floor(fav/3)+1;
+  const evolved = level>=10;
+  const emoji = evolved ? pet.emoji+pet.emoji : pet.emoji;
+  
   const display = document.getElementById('petDisplay');
-  const effectHtml = pet.effect ? `<div style="font-size:40px;animation:floatUp 2s infinite">${pet.skill||''}</div>` : '';
   display.innerHTML = `
     <div class="pet-card" style="display:block">
-      <span class="pet-emoji ${pet.effect||''}">${pet.emoji}</span>
-      <div class="pet-name">${pet.name}</div>
-      <div class="pet-rarity ${getRarityClass(pet.rarity)}">${getRarityText(pet.rarity)}${isNew?' ✨新获得!':''}</div>
+      <span class="pet-emoji" onclick="petClick(${pet.id})" style="${evolved?'font-size:85px;filter:drop-shadow(0 0 10px gold)':''}" id="petEmoji">${emoji}</span>
+      <div class="pet-name">${pet.name} ${evolved?'✨':'Lv.'+level}</div>
+      <div class="pet-rarity rarity-${pet.rarity}">${['普通','稀有','史诗','传说'][['common','rare','epic','legendary'].indexOf(pet.rarity)]}</div>
       <div>${pet.desc}</div>
-      ${pet.skill ? `<div style="margin-top:8px;font-weight:bold">${pet.skill}</div>` : ''}
-      ${effectHtml}
+      <div class="favor-text">❤️ 好感 ${fav}/30 ${evolved?'已进化!':'(点击增加)'}</div>
+      ${isNew?'<div style="color:gold;font-weight:bold;margin-top:6px">✨ 新获得!</div>':''}
     </div>
   `;
-  unlockPet(pet);
 }
 
-async function draw() {
-  if (isSpinning || coins <= 0) return;
+function petClick(id){
+  sfxHeart();
+  S.favor[id] = (S.favor[id]||0) + 1;
+  const fav = S.favor[id];
+  const level = Math.floor(fav/3)+1;
+  // 爱心特效
+  const emojiEl = document.getElementById('petEmoji');
+  if(emojiEl){
+    for(let i=0;i<3;i++){
+      const heart = document.createElement('div');
+      heart.className = 'hearts';
+      heart.textContent = '❤️';
+      heart.style.left = (emojiEl.offsetLeft+30+Math.random()*40)+'px';
+      heart.style.top = (emojiEl.offsetTop+10)+'px';
+      document.getElementById('petDisplay').appendChild(heart);
+      setTimeout(()=>heart.remove(),1000);
+    }
+  }
+  // 进化检测
+  if(level>=10 && fav%3===0){
+    showPet(ALL_PETS.find(p=>p.id===id),false);
+    setTimeout(()=>showBonus(`🌟 ${ALL_PETS.find(p=>p.id===id).name} 已进化!`),300);
+  }
+  document.querySelector('.favor-text').textContent = `❤️ 好感 ${fav}/30 ${level>=10?'已进化!':'(点击增加)'}`;
+  save();
+  updateUI();
+}
+
+// ===== 抽卡系统 =====
+let isSpinning = false;
+let pityRewardReady = false;
+
+function startDraw(){
+  if(isSpinning || S.coins<=0) return;
+  sfxClick();
+  
+  // 保底检测
+  if(S.pity >= 10 && !pityRewardReady){
+    pityRewardReady = true;
+    S.pity = 0;
+  }
+  
+  S.coins--;
+  S.totalDraws++;
+  S.pity++;
   isSpinning = true;
-  coins--;
-  document.getElementById('coins').textContent = coins;
   document.getElementById('drawBtn').disabled = true;
   document.getElementById('result').textContent = '🎲 转动中...';
   
-  const slots = [document.getElementById('s1'), document.getElementById('s2'), document.getElementById('s3')];
-  slots.forEach(s => { s.classList.add('spinning'); s.classList.remove('match'); });
+  const slots = [document.getElementById('s1'),document.getElementById('s2'),document.getElementById('s3')];
+  slots.forEach(s=>{s.classList.remove('match'); s.className='slot';});
   
-  // 模拟转动
-  let ticks = 0;
-  const spinInt = setInterval(() => {
-    slots.forEach(s => {
-      const rand = allPets[Math.floor(Math.random()*allPets.length)];
-      s.textContent = rand.emoji;
+  // 转动音效
+  const spinSound = setInterval(sfxSpin, 80);
+  
+  // 错落停止
+  let tick=0;
+  const intv = setInterval(()=>{
+    slots.forEach(s=>{
+      const r = ALL_PETS[Math.floor(Math.random()*ALL_PETS.length)];
+      s.textContent = r.emoji;
     });
-    ticks++;
-    if (ticks > 20) {
-      clearInterval(spinInt);
-      finishDraw(slots);
+    tick++;
+    if(tick>15){
+      clearInterval(intv);
+      clearInterval(spinSound);
+      // 依次停止
+      setTimeout(()=>{
+        slots[0].classList.add('stop1');
+        const r1 = ALL_PETS[Math.floor(Math.random()*ALL_PETS.length)];
+        slots[0].textContent = r1.emoji;
+      },100);
+      setTimeout(()=>{
+        slots[1].classList.add('stop2');
+        const r2 = ALL_PETS[Math.floor(Math.random()*ALL_PETS.length)];
+        slots[1].textContent = r2.emoji;
+      },400);
+      setTimeout(()=>{
+        slots[2].classList.add('stop3');
+        finishDraw(slots);
+      },800);
     }
-  }, 80);
+  },60);
 }
 
-function finishDraw(slots) {
-  // 判定结果
-  const isJackpot = Math.random() < 0.25; // 25%概率中奖
-  let resultPets;
+function finishDraw(slots){
+  // 判断结果
+  let isJackpot = false;
+  let winner = null;
   
-  if (isJackpot) {
-    // 3格相同，根据概率出不同稀有度
-    const r = Math.random();
-    let pool;
-    if (r < 0.4) pool = pets.common;
-    else if (r < 0.75) pool = pets.rare;
-    else if (r < 0.95) pool = pets.epic;
-    else pool = pets.legendary;
-    
-    const winner = pool[Math.floor(Math.random()*pool.length)];
-    resultPets = [winner, winner, winner];
-    
-    document.getElementById('result').innerHTML = `🎉 <span style="color:gold">JACKPOT!</span> 获得 ${winner.name}!`;
-    showPet(winner, !unlocked.has(winner.id));
-    if(!unlocked.has(winner.id)) coins += 5; // 新宠物奖励
-    document.getElementById('coins').textContent = coins;
+  // 保底触发
+  if(pityRewardReady){
+    isJackpot = true;
+    const pools = [PETS.rare,PETS.epic,PETS.legendary];
+    const pool = pools[Math.floor(Math.random()*pools.length)];
+    winner = pool[Math.floor(Math.random()*pool.length)];
+    pityRewardReady = false;
+    S.pity = 0;
   } else {
-    // 没中，随机3个
-    resultPets = Array(3).fill().map(() => allPets[Math.floor(Math.random()*allPets.length)]);
-    const consolation = pets.common[Math.floor(Math.random()*pets.common.length)];
-    document.getElementById('result').textContent = `没凑齐~ 但获得了 ${consolation.name}(普通)`;
-    showPet(consolation, !unlocked.has(consolation.id));
+    // 正常概率
+    const r = Math.random();
+    if(r < 0.35){
+      // 中奖
+      isJackpot = true;
+      const rr = Math.random();
+      if(rr<0.45) winner = PETS.common[Math.floor(Math.random()*PETS.common.length)];
+      else if(rr<0.78) winner = PETS.rare[Math.floor(Math.random()*PETS.rare.length)];
+      else if(rr<0.94) winner = PETS.epic[Math.floor(Math.random()*PETS.epic.length)];
+      else winner = PETS.legendary[Math.floor(Math.random()*PETS.legendary.length)];
+    }
   }
   
-  slots.forEach((s, i) => {
-    s.classList.remove('spinning');
-    s.textContent = resultPets[i].emoji;
-    if (isJackpot) s.classList.add('match');
-  });
-  
-  // 特效
-  if (isJackpot && resultPets[0].effect) {
-    createEffects(resultPets[0].effect);
+  // 双倍券
+  let useDouble = false;
+  if(S.items.double>0 && isJackpot){
+    useDouble = true;
+    S.items.double--;
   }
   
-  setTimeout(() => {
+  if(isJackpot && winner){
+    sfxWin();
+    slots.forEach(s=>{s.textContent=winner.emoji; s.classList.add('match');});
+    const isNew = !S.unlocked.includes(winner.id);
+    if(isNew){
+      S.unlocked.push(winner.id);
+      if(useDouble) S.coins += 3;
+      else S.coins += 1;
+    }
+    document.getElementById('result').innerHTML = `🎉 <span style="color:gold">JACKPOT!</span> 获得 ${winner.name}${useDouble?' (双倍!)':''}!`;
+    showPet(winner, isNew);
+    // 粒子特效
+    for(let i=0;i<8;i++){
+      setTimeout(()=>{
+        const p = document.createElement('div');
+        p.className = 'effect-particle';
+        p.textContent = ['✨','⭐','💫','🌟'][Math.floor(Math.random()*4)];
+        p.style.left = (window.innerWidth/2 + (Math.random()-0.5)*250)+'px';
+        p.style.top = '250px';
+        p.style.setProperty('--tx',(Math.random()-0.5)*200+'px');
+        p.style.setProperty('--ty',-(100+Math.random()*200)+'px');
+        document.body.appendChild(p);
+        setTimeout(()=>p.remove(),1200);
+      },i*100);
+    }
+    initDex();
+  } else {
+    // 没中
+    const conso = PETS.common[Math.floor(Math.random()*PETS.common.length)];
+    document.getElementById('result').textContent = `没凑齐~ 获得 ${conso.name}(普通)`;
+    showPet(conso, !S.unlocked.includes(conso.id));
+    if(!S.unlocked.includes(conso.id)){
+      S.unlocked.push(conso.id);
+      initDex();
+    }
+  }
+  
+  save();
+  updateUI();
+  
+  setTimeout(()=>{
     isSpinning = false;
-    document.getElementById('drawBtn').disabled = coins <= 0;
-    if(coins <= 0) document.getElementById('result').textContent += ' (没币了，刷新送5币)';
-    if(coins === 0) coins = 5; // 保底
-  }, 1000);
+    document.getElementById('drawBtn').disabled = S.coins<=0;
+    if(S.coins<=0){
+      document.getElementById('result').textContent += ' (没币了，每小时自动回1币)';
+    }
+  },600);
 }
 
-function createEffects(cls) {
-  const display = document.getElementById('petDisplay');
-  for(let i=0; i<5; i++) {
-    setTimeout(() => {
-      const ef = document.createElement('div');
-      ef.className = `effect ${cls}`;
-      ef.textContent = ['✨','⭐','💫','🌟'][Math.floor(Math.random()*4)];
-      ef.style.left = (window.innerWidth/2 + (Math.random()-0.5)*200) + 'px';
-      ef.style.top = '200px';
-      document.body.appendChild(ef);
-      setTimeout(() => ef.remove(), 1500);
-    }, i*200);
+// ===== 商店 =====
+function buyItem(type){
+  sfxClick();
+  if(type==='double' && S.coins>=5){
+    S.coins-=5; S.items.double++; save(); updateUI();
+    document.getElementById('result').textContent = '✅ 购买双倍券成功!';
+  } else if(type==='reset' && S.coins>=3){
+    S.coins-=3; S.items.reset++; S.pity=0; save(); updateUI();
+    document.getElementById('result').textContent = '✅ 保底已重置!';
+  } else {
+    document.getElementById('result').textContent = '❌ 币不够!';
   }
 }
 
-// 自动回币
-setInterval(() => {
-  if(coins < 10) {
-    coins++;
-    document.getElementById('coins').textContent = coins;
-    document.getElementById('drawBtn').disabled = false;
-  }
-}, 8000);
+// ===== 存档管理 =====
+function exportSave(){
+  sfxClick();
+  const str = btoa(JSON.stringify(S));
+  navigator.clipboard.writeText(str).then(()=>{
+    alert('存档已复制到剪贴板!');
+  }).catch(()=>{
+    prompt('复制以下存档:', str);
+  });
+}
 
+function importSave(){
+  sfxClick();
+  const str = prompt('粘贴存档:');
+  if(str){
+    try{
+      const data = JSON.parse(atob(str));
+      Object.assign(S, data);
+      save();
+      initDex();
+      updateUI();
+      if(currentPetId) showPet(ALL_PETS.find(p=>p.id===currentPetId),false);
+      alert('导入成功!');
+    }catch(e){
+      alert('存档格式错误');
+    }
+  }
+}
+
+// ===== 标签切换 =====
+function switchTab(tab,btn){
+  sfxClick();
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tabMain').style.display = tab==='main'?'block':'none';
+  document.getElementById('tabShop').style.display = tab==='shop'?'block':'none';
+  document.getElementById('tabDex').style.display = tab==='dex'?'block':'none';
+  document.getElementById('tabSettings').style.display = tab==='settings'?'block':'none';
+}
+
+// ===== 自动回币 =====
+setInterval(()=>{
+  if(S.coins<30){
+    S.coins++;
+    sfxCoin();
+    save();
+    updateUI();
+  }
+},3600000); // 每小时1币
+
+// ===== 启动 =====
 initDex();
-// 默认展示
-showPet(pets.common[0], false);
+updateUI();
+showPet(PETS.common[0], false);
 </script>
 </body>
 </html>
