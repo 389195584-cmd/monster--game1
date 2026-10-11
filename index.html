@@ -3,234 +3,130 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>单词怪兽 · 英语学习伴侣</title>
+<title>单词怪兽 · 万圣节版</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
-body{background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);color:#fff;min-height:100vh;overflow-x:hidden}
-.container{max-width:480px;margin:0 auto;padding:16px;text-align:center}
-h1{font-size:22px;margin:8px 0 2px;text-shadow:0 2px 10px rgba(255,215,0,0.3)}
-.subtitle{font-size:12px;color:#aaa;margin-bottom:8px}
-.coins{font-size:15px;color:gold;margin-bottom:8px;background:rgba(255,215,0,0.1);padding:5px 14px;border-radius:20px;display:inline-block}
-/* 学习模块 - 主功能 */
-.learn-panel{display:block;margin-top:8px;text-align:left}
-.word-card{background:rgba(255,255,255,0.07);border-radius:16px;padding:18px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.12);min-height:150px;text-align:center}
-.word-english{font-size:30px;font-weight:bold;margin-bottom:6px;color:#fff;letter-spacing:1px}
-.word-chinese{font-size:19px;color:#ddd;margin-bottom:10px;min-height:28px}
-.word-progress{font-size:12px;color:#888;margin-bottom:6px}
-.word-controls{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.word-controls button{padding:8px 20px;border-radius:20px;border:none;font-size:14px;cursor:pointer;transition:all 0.2s;touch-action:manipulation}
-.btn-know{background:#00cc66;color:#fff;box-shadow:0 2px 8px rgba(0,204,102,0.3)}
-.btn-dont{background:#e94560;color:#fff;box-shadow:0 2px 8px rgba(233,69,96,0.3)}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,sans-serif;}
+body{background:linear-gradient(145deg,#0f0c29,#302b63,#24243e);color:#fff;min-height:100vh;overflow-x:hidden}
+.container{max-width:480px;margin:0 auto;padding:14px;text-align:center;position:relative}
+/* 万圣节装饰 */
+.halloween-banner{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;background:radial-gradient(circle at 20% 30%,rgba(255,140,0,0.06),transparent 60%)}
+.halloween-emoji{position:fixed;font-size:22px;opacity:0.12;pointer-events:none;animation:floatHalloween 8s ease-in-out infinite}
+@keyframes floatHalloween{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-20px) rotate(10deg)}}
+/* 头部 */
+.header{display:flex;justify-content:space-between;align-items:center;padding:4px 0 8px;position:relative;z-index:1}
+.logo{font-size:20px;font-weight:bold;background:linear-gradient(90deg,gold,#ff8800);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.coins-bar{background:rgba(255,215,0,0.1);padding:4px 14px;border-radius:20px;font-size:13px;border:1px solid rgba(255,215,0,0.2)}
+.coins-bar span{color:gold}
+/* 学习面板 */
+.learn-panel{z-index:1;position:relative}
+.lib-tabs{display:flex;gap:4px;margin-bottom:8px;justify-content:center}
+.lib-tab{padding:5px 12px;border-radius:14px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:#aaa;font-size:11px;cursor:pointer;transition:all 0.2s}
+.lib-tab.active{background:rgba(255,215,0,0.12);border-color:gold;color:gold}
+.word-card{background:rgba(255,255,255,0.06);border-radius:16px;padding:18px;margin-bottom:8px;border:1px solid rgba(255,255,255,0.1);min-height:140px}
+.word-en{font-size:28px;font-weight:bold;letter-spacing:0.5px;margin-bottom:4px}
+.word-cn{font-size:18px;color:#ccc;min-height:26px;margin-bottom:6px}
+.word-progress{font-size:11px;color:#888;margin-bottom:6px}
+.word-actions{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.word-actions button{padding:7px 18px;border-radius:20px;border:none;font-size:13px;cursor:pointer;transition:all 0.15s;touch-action:manipulation}
+.btn-know{background:#00cc66;color:#fff;box-shadow:0 2px 8px rgba(0,204,102,0.25)}
+.btn-dont{background:#e94560;color:#fff;box-shadow:0 2px 8px rgba(233,69,96,0.25)}
 .btn-next{background:#0f3460;color:#fff}
-.word-stats{font-size:12px;color:#aaa;margin-top:6px;text-align:center}
-.lib-select{display:flex;gap:5px;justify-content:center;margin-bottom:8px;flex-wrap:wrap}
-.lib-btn{padding:5px 12px;border-radius:14px;border:1px solid rgba(255,255,255,0.2);background:transparent;color:#aaa;font-size:11px;cursor:pointer;transition:all 0.2s}
-.lib-btn.active{background:rgba(255,215,0,0.12);border-color:gold;color:gold}
-.wrong-book{font-size:12px;color:#ff6666;margin-top:5px;cursor:pointer;text-decoration:underline}
-/* 宠物思念弹窗 */
-.miss-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.82);display:none;z-index:997;justify-content:center;align-items:center;flex-direction:column}
-.miss-box{background:linear-gradient(135deg,#1a1a3e,#302b63);border-radius:18px;padding:24px 20px;text-align:center;border:2px solid rgba(255,215,0,0.3);max-width:320px;animation:fadeIn 0.3s}
-.miss-emoji{font-size:56px;display:block;margin-bottom:6px}
-.miss-text{font-size:17px;color:#fff;margin-bottom:4px}
-.miss-sub{font-size:13px;color:#ccc;margin-bottom:10px}
-.miss-btn{background:gold;color:#1a1a3e;border:none;padding:8px 24px;border-radius:20px;font-size:14px;font-weight:bold;cursor:pointer;margin:3px}
+.word-stats{font-size:11px;color:#aaa;margin-top:4px}
+.wrong-link{font-size:11px;color:#ff6666;cursor:pointer;text-decoration:underline;margin-top:3px;display:inline-block}
 /* 老虎机 */
-.slot-machine{background:rgba(255,255,255,0.06);border-radius:20px;padding:14px;margin-bottom:10px;border:2px solid rgba(255,215,0,0.15)}
-.slots{display:flex;justify-content:center;gap:8px;margin-bottom:12px;height:100px}
-.slot{width:78px;height:90px;background:#1a1a3e;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:40px;border:3px solid #444;transition:all 0.3s;position:relative}
-.slot.shake{animation:shake 0.25s infinite}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
-.slot.match{border-color:gold;box-shadow:0 0 18px gold;animation:pulseGold 0.7s infinite}
-@keyframes pulseGold{0%,100%{box-shadow:0 0 12px gold}50%{box-shadow:0 0 28px gold}}
-.up-badge{background:linear-gradient(135deg,#ff6600,#ff3300);color:#fff;padding:2px 10px;border-radius:14px;font-size:10px;display:inline-block;margin-bottom:4px}
-.btn{background:linear-gradient(135deg,#e94560,#c23152);color:#fff;border:none;padding:10px 32px;font-size:15px;border-radius:28px;cursor:pointer;font-weight:bold;box-shadow:0 4px 15px rgba(233,69,96,0.4);transition:all 0.2s;touch-action:manipulation}
-.btn:active{transform:scale(0.94)}
-.btn:disabled{background:#555;box-shadow:none;cursor:not-allowed}
-.btn-small{padding:5px 14px;font-size:12px;border-radius:14px}
-.result-text{font-size:15px;margin-top:6px;min-height:22px;font-weight:bold}
+.slot-panel{display:none;z-index:1;position:relative}
+.slot-machine{background:rgba(255,255,255,0.05);border-radius:18px;padding:12px;border:2px solid rgba(255,165,0,0.15);margin-bottom:8px}
+.up-label{background:linear-gradient(135deg,#ff6600,#ff3300);color:#fff;padding:2px 12px;border-radius:14px;font-size:10px;display:inline-block;margin-bottom:4px}
+.slot-row{display:flex;justify-content:center;gap:6px;margin-bottom:10px;height:90px}
+.slot-cell{width:72px;height:84px;background:#1a1a3e;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:36px;border:2px solid #333;transition:all 0.3s;position:relative}
+.slot-cell.spin{animation:slotSpin 0.1s infinite linear}
+@keyframes slotSpin{0%{transform:translateY(0)}25%{transform:translateY(-3px)}75%{transform:translateY(3px)}100%{transform:translateY(0)}}
+.slot-cell.jackpot{border-color:gold;box-shadow:0 0 20px gold;animation:jpGlow 0.6s infinite alternate}
+@keyframes jpGlow{0%{box-shadow:0 0 10px gold}100%{box-shadow:0 0 30px orange}}
+.btn-draw{background:linear-gradient(135deg,#e94560,#c23152);color:#fff;border:none;padding:10px 34px;font-size:15px;border-radius:28px;cursor:pointer;font-weight:bold;box-shadow:0 4px 15px rgba(233,69,96,0.4);transition:all 0.15s;touch-action:manipulation}
+.btn-draw:active{transform:scale(0.93)}
+.btn-draw:disabled{background:#555;box-shadow:none;cursor:not-allowed}
+.draw-result{font-size:14px;margin-top:4px;min-height:20px;font-weight:bold}
+.pity-text{font-size:10px;color:#666;margin-top:2px}
 /* 宠物卡片 */
-.pet-display{margin-top:10px;min-height:130px}
-.pet-card{background:linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02));border-radius:16px;padding:14px;border:1px solid rgba(255,255,255,0.12);display:none;animation:fadeIn 0.35s}
-@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.pet-emoji{font-size:54px;display:block;margin-bottom:3px;cursor:pointer;transition:transform 0.15s;position:relative}
-.pet-emoji:active{transform:scale(0.92)}
-.pet-name{font-size:17px;font-weight:bold;margin-bottom:2px}
-.pet-rarity{display:inline-block;padding:2px 8px;border-radius:14px;font-size:10px;margin-bottom:4px}
-.rarity-common{background:#666}
-.rarity-rare{background:#0066cc;box-shadow:0 0 6px #0066cc}
-.rarity-epic{background:#9900cc;box-shadow:0 0 10px #9900cc}
-.rarity-legendary{background:#ff6600;box-shadow:0 0 14px #ff6600}
-.favor-text{font-size:11px;color:#ff99cc;margin-top:2px}
-.story-text{font-size:11px;color:#ccc;font-style:italic;margin-top:3px;padding:5px;background:rgba(255,255,255,0.03);border-radius:5px}
-.work-status{font-size:11px;color:#88ff88;margin-top:3px}
-.mood-text{font-size:10px;color:#aaa;margin-top:1px}
-.hearts{position:absolute;pointer-events:none;font-size:18px;animation:heartFloat 0.7s forwards}
-@keyframes heartFloat{0%{transform:translateY(0) scale(0.5);opacity:1}100%{transform:translateY(-45px) scale(1.4);opacity:0}}
-/* 旅游 */
-.travel-section{font-size:11px;color:#88ccff;margin-top:4px;cursor:pointer;text-decoration:underline}
-.travel-result{font-size:12px;color:gold;margin-top:3px}
-/* 小游戏 */
-.minigame-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.87);display:none;z-index:999;justify-content:center;align-items:center;flex-direction:column}
-.minigame-area{width:260px;height:340px;background:#1a1a3e;border-radius:14px;position:relative;overflow:hidden;border:2px solid gold}
-.star-falling{position:absolute;font-size:24px;animation:starFall 2s linear forwards;cursor:pointer}
-@keyframes starFall{0%{transform:translateY(-30px);opacity:1}100%{transform:translateY(360px);opacity:0.3}}
-.minigame-score{font-size:17px;color:gold;margin-top:6px}
-/* 签到 */
-.checkin-panel{display:none;margin-top:10px}
-.checkin-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:6px}
-.checkin-day{background:rgba(255,255,255,0.05);border-radius:5px;padding:6px 1px;text-align:center;font-size:10px;border:1px solid rgba(255,255,255,0.07)}
-.checkin-day.done{background:rgba(255,215,0,0.12);border-color:gold;color:gold}
-.checkin-day.today{border-color:#e94560;box-shadow:0 0 6px rgba(233,69,96,0.4)}
-.challenge-item{background:rgba(255,255,255,0.04);border-radius:6px;padding:6px;margin-bottom:3px;display:flex;justify-content:space-between;align-items:center;font-size:11px}
-/* 图鉴 */
-.dex{display:none;margin-top:10px;text-align:left}
-.dex h3{border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:3px;font-size:13px}
-.dex-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:6px;max-height:220px;overflow-y:auto}
-.dex-item{background:rgba(255,255,255,0.04);border-radius:6px;padding:5px 1px;text-align:center;font-size:9px;border:1px solid rgba(255,255,255,0.05)}
-.dex-item.unlocked{border-color:gold;background:rgba(255,215,0,0.08)}
-.dex-emoji{font-size:22px;display:block}
-/* 设置 */
-.settings{display:none;margin-top:10px}
-.setting-btn{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:6px 14px;border-radius:8px;cursor:pointer;margin:2px;font-size:12px}
+.pet-area{min-height:120px;margin-top:8px;z-index:1;position:relative}
+.pet-card{background:linear-gradient(135deg,rgba(255,255,255,0.07),rgba(255,255,255,0.01));border-radius:16px;padding:12px;border:1px solid rgba(255,255,255,0.1);display:none;animation:fadeUp 0.35s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.pet-emoji{font-size:50px;display:block;cursor:pointer;transition:transform 0.1s;position:relative;animation:petBreathe 2s ease-in-out infinite}
+@keyframes petBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+.pet-emoji:active{transform:scale(0.85)}
+.pet-name{font-size:16px;font-weight:bold;margin-bottom:1px}
+.pet-rarity-badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:10px;margin-bottom:3px}
+.r-common{background:#666}
+.r-rare{background:#0066cc;box-shadow:0 0 6px #0066cc}
+.r-epic{background:#9900cc;box-shadow:0 0 10px #9900cc}
+.r-legendary{background:#ff6600;box-shadow:0 0 14px #ff6600;animation:legGlow 1.5s infinite alternate}
+@keyframes legGlow{0%{box-shadow:0 0 8px #ff6600}100%{box-shadow:0 0 24px #ffaa00}}
+.favor-bar{font-size:10px;color:#ff99cc;margin-top:2px}
+.pet-story{font-size:10px;color:#bbb;font-style:italic;margin-top:2px;padding:4px;background:rgba(255,255,255,0.02);border-radius:4px}
+.action-btns{display:flex;gap:4px;justify-content:center;margin-top:4px;flex-wrap:wrap}
+.action-btn{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:4px 10px;border-radius:12px;font-size:10px;cursor:pointer;transition:all 0.15s}
+.action-btn:active{background:rgba(255,255,255,0.15)}
+/* 思念弹窗 */
+.miss-mask{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.83);display:none;z-index:999;justify-content:center;align-items:center;flex-direction:column}
+.miss-dialog{background:linear-gradient(135deg,#1a1a3e,#302b63);border-radius:16px;padding:22px 18px;text-align:center;border:2px solid rgba(255,215,0,0.25);max-width:300px;animation:popIn 0.3s}
+@keyframes popIn{0%{transform:scale(0.8);opacity:0}100%{transform:scale(1);opacity:1}}
+.miss-icon{font-size:48px;display:block;margin-bottom:4px}
+.miss-msg{font-size:16px;color:#fff;margin-bottom:3px}
+.miss-hint{font-size:12px;color:#ccc;margin-bottom:8px}
+.miss-btn{background:gold;color:#1a1a3e;border:none;padding:7px 20px;border-radius:18px;font-size:13px;font-weight:bold;cursor:pointer;margin:2px}
+.miss-btn-skip{background:#555;color:#fff;border:none;padding:7px 20px;border-radius:18px;font-size:13px;cursor:pointer;margin:2px}
 /* 导航 */
-.nav{display:flex;justify-content:space-around;margin-top:14px;padding:6px 0;border-top:1px solid rgba(255,255,255,0.08)}
-.nav-btn{background:none;border:none;color:#888;font-size:12px;padding:5px 8px;cursor:pointer;border-radius:6px;transition:all 0.2s}
-.nav-btn.active{color:gold;background:rgba(255,215,0,0.08)}
+.nav-bar{display:flex;justify-content:space-around;margin-top:12px;padding:6px 0;border-top:1px solid rgba(255,255,255,0.06);position:relative;z-index:1}
+.nav-item{background:none;border:none;color:#777;font-size:11px;padding:4px 6px;cursor:pointer;border-radius:6px;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;gap:2px}
+.nav-item .icon{font-size:18px}
+.nav-item.active{color:gold;background:rgba(255,215,0,0.06)}
 /* 特效 */
-.bonus-text{position:fixed;top:38%;left:50%;transform:translate(-50%,-50%);font-size:28px;font-weight:bold;color:gold;text-shadow:0 0 22px gold;pointer-events:none;animation:bonusPop 1.2s forwards;z-index:996}
-@keyframes bonusPop{0%{transform:translate(-50%,-50%) scale(0.5);opacity:0}30%{transform:translate(-50%,-50%) scale(1.15);opacity:1}100%{transform:translate(-50%,-80%) scale(1);opacity:0}}
-/* 名片 */
-.card-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.91);display:none;z-index:998;justify-content:center;align-items:center;flex-direction:column}
-.business-card{width:290px;padding:20px 14px;background:linear-gradient(135deg,#1a1a3e,#302b63);border-radius:14px;border:2px solid gold;text-align:center}
-.card-title{font-size:18px;font-weight:bold;color:gold;margin-bottom:6px}
-.card-pet{font-size:46px;display:block;margin:6px 0}
-.card-info{font-size:12px;color:#ccc;line-height:1.5}
-.card-footer{font-size:9px;color:#666;margin-top:10px}
+.toast{position:fixed;top:30%;left:50%;transform:translate(-50%,-50%);font-size:24px;font-weight:bold;color:gold;text-shadow:0 0 20px gold;pointer-events:none;animation:toastAnim 1.4s forwards;z-index:995}
+@keyframes toastAnim{0%{transform:translate(-50%,-50%) scale(0.4);opacity:0}25%{transform:translate(-50%,-50%) scale(1.1);opacity:1}100%{transform:translate(-50%,-70%) scale(1);opacity:0}}
+.heart-particle{position:absolute;pointer-events:none;font-size:16px;animation:heartFly 0.8s forwards}
+@keyframes heartFly{0%{transform:translateY(0) scale(0.3);opacity:1}100%{transform:translateY(-40px) scale(1.2);opacity:0}}
+/* 签到面板 */
+.checkin-panel{display:none;z-index:1;position:relative}
+.checkin-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:6px}
+.checkin-cell{background:rgba(255,255,255,0.04);border-radius:4px;padding:5px 0;text-align:center;font-size:9px;border:1px solid rgba(255,255,255,0.05)}
+.checkin-cell.done{background:rgba(255,215,0,0.1);border-color:gold;color:gold}
+.checkin-cell.today{border-color:#e94560;box-shadow:0 0 4px rgba(233,69,96,0.3)}
+/* 图鉴 */
+.dex-panel{display:none;z-index:1;position:relative;text-align:left}
+.dex-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:6px;max-height:200px;overflow-y:auto}
+.dex-item{background:rgba(255,255,255,0.03);border-radius:6px;padding:4px 2px;text-align:center;font-size:9px;border:1px solid rgba(255,255,255,0.04)}
+.dex-item.owned{border-color:gold;background:rgba(255,215,0,0.06)}
+.dex-emoji{font-size:20px;display:block}
+/* 设置 */
+.settings-panel{display:none;z-index:1;position:relative}
+.setting-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#fff;padding:5px 12px;border-radius:8px;cursor:pointer;margin:2px;font-size:11px}
+/* 滚动条美化 */
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:10px}
 </style>
 </head>
 <body>
-<div class="container" id="appContainer">
-  <h1>📚 单词怪兽</h1>
-  <div class="subtitle">背单词赚币 · 养宠物更爱学习</div>
-  <div class="coins">💰 <span id="coins">15</span> 币 | 📖 已学 <span id="wordCount">0</span> 词</div>
-  
-  <!-- 学习面板 - 主功能 -->
-  <div class="learn-panel" id="tabLearn">
-    <div class="lib-select">
-      <button class="lib-btn active" onclick="selectLib('basic',this)">基础 3178词</button>
-      <button class="lib-btn" onclick="selectLib('cet3',this)">三级 1115词</button>
-      <button class="lib-btn" onclick="selectLib('cet4',this)">四级 1463词</button>
-    </div>
-    <div class="word-card" id="wordCard">
-      <div class="word-english" id="wordEn">apple</div>
-      <div class="word-chinese" id="wordCn">苹果</div>
-      <div class="word-progress" id="wordProgress">进度: 0/50</div>
-      <div class="word-controls">
-        <button class="btn-know" onclick="markWord(true)">✅ 认识</button>
-        <button class="btn-dont" onclick="markWord(false)">❌ 不认识</button>
-        <button class="btn-next" onclick="nextWord()">➡️ 下一题</button>
-      </div>
-    </div>
-    <div class="word-stats" id="wordStats">今日学习: 0词 | 掌握率: 0%</div>
-    <div class="wrong-book" onclick="reviewWrong()">📕 错题本 (<span id="wrongCount">0</span>题)</div>
-  </div>
-  
-  <!-- 抽卡面板 -->
-  <div class="slot-machine" id="tabMain" style="display:none">
-    <div id="upBadge" class="up-badge" style="display:none">🔥 UP: ???</div>
-    <div class="slots">
-      <div class="slot" id="s1">❓</div>
-      <div class="slot" id="s2">❓</div>
-      <div class="slot" id="s3">❓</div>
-    </div>
-    <button class="btn" id="drawBtn" onclick="startDraw()">🎰 抽卡 (1币)</button>
-    <div class="result-text" id="result"></div>
-    <div style="font-size:10px;color:#666;margin-top:3px">保底: 已抽 <span id="pityCount">0</span> 次</div>
-  </div>
-  
-  <!-- 签到面板 -->
-  <div class="checkin-panel" id="tabCheckin" style="display:none">
-    <h3 style="font-size:15px">📅 每日签到</h3>
-    <div class="checkin-grid" id="checkinGrid"></div>
-    <button class="btn btn-small" onclick="doCheckin()" id="checkinBtn" style="margin-top:6px">签到</button>
-    <div id="checkinResult" style="font-size:12px;color:gold;margin-top:3px"></div>
-    <h3 style="margin-top:10px;font-size:13px">🏆 每日挑战</h3>
-    <div id="challenges"></div>
-  </div>
-  
-  <!-- 图鉴面板 -->
-  <div class="dex" id="tabDex" style="display:none">
-    <h3>📖 宠物图鉴 (<span id="unlockedCount">0</span>/10)</h3>
-    <div class="dex-grid" id="dexGrid"></div>
-  </div>
-  
-  <!-- 设置面板 -->
-  <div class="settings" id="tabSettings" style="display:none">
-    <h3 style="font-size:15px">⚙️ 设置</h3>
-    <button class="setting-btn" onclick="generateCard()">🃏 生成名片</button>
-    <button class="setting-btn" onclick="exportSave()">📤 导出存档</button>
-    <button class="setting-btn" onclick="importSave()">📥 导入存档</button>
-    <div style="font-size:10px;color:#aaa;margin-top:5px">背单词赚币 · 点击宠物加好感</div>
-  </div>
-  
-  <!-- 宠物展示 -->
-  <div class="pet-display" id="petDisplay"></div>
-  
-  <!-- 导航 -->
-  <div class="nav">
-    <button class="nav-btn active" onclick="switchTab('learn',this)">📚学习</button>
-    <button class="nav-btn" onclick="switchTab('main',this)">🎰抽卡</button>
-    <button class="nav-btn" onclick="switchTab('checkin',this)">📅签到</button>
-    <button class="nav-btn" onclick="switchTab('dex',this)">📖图鉴</button>
-    <button class="nav-btn" onclick="switchTab('settings',this)">⚙️设置</button>
-  </div>
-</div>
-
-<!-- 宠物思念弹窗 -->
-<div class="miss-overlay" id="missOverlay">
-  <div class="miss-box">
-    <span class="miss-emoji" id="missEmoji">🐱</span>
-    <div class="miss-text" id="missText">主人，我想你了...</div>
-    <div class="miss-sub" id="missSub">来复习一个单词吧！</div>
-    <button class="miss-btn" onclick="missReview()">📖 复习单词</button>
-    <button class="miss-btn" onclick="closeMiss()" style="background:#555;color:#fff">稍后再说</button>
-  </div>
-</div>
-
-<!-- 小游戏弹窗 -->
-<div class="minigame-overlay" id="minigameOverlay">
-  <h2 style="font-size:18px">⭐ 接星星</h2>
-  <div class="minigame-area" id="minigameArea"></div>
-  <div class="minigame-score">得分: <span id="mgScore">0</span> / 10</div>
-  <button class="btn btn-small" onclick="closeMinigame()" style="margin-top:6px">关闭</button>
-</div>
-
-<!-- 名片弹窗 -->
-<div class="card-overlay" id="cardOverlay">
-  <div class="business-card" id="businessCard">
-    <div class="card-title">🎴 单词收藏家</div>
-    <span class="card-pet" id="cardPetEmoji">🦄</span>
-    <div class="card-info" id="cardInfo">加载中...</div>
-    <div class="card-footer">长按保存分享</div>
-  </div>
-  <button class="btn btn-small" onclick="closeCard()" style="margin-top:14px">关闭</button>
-</div>
-
 <script>
-// ===== 音效 =====
+// ===== 音效系统 =====
 const AC=window.AudioContext||window.webkitAudioContext;let ac;
-function ia(){if(!ac)ac=new AC()}
-function pt(f,d,t='sine',v=0.09){try{ia();const o=ac.createOscillator(),g=ac.createGain();o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v,ac.currentTime);g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+d);o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+d)}catch(e){}}
-function sc(){pt(780,0.05,'square',0.045)}
-function ss(){pt(300+Math.random()*380,0.022,'sawtooth',0.032)}
-function sw(){pt(520,0.1);setTimeout(()=>pt(655,0.1),70);setTimeout(()=>pt(780,0.14),70)}
-function sh(){pt(870,0.14);setTimeout(()=>pt(1090,0.23),120)}
-function sco(){pt(1180,0.04)}
+function initAudio(){if(!ac)ac=new AudioContext()}
+function playTone(freq,dur,type='sine',vol=0.07){
+  try{initAudio();const o=ac.createOscillator(),g=ac.createGain();
+  o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(vol,ac.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+dur);
+  o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+dur)}catch(e){}
+}
+function sfxClick(){playTone(680,0.035,'square',0.04)}
+function sfxWin(){playTone(550,0.08);setTimeout(()=>playTone(730,0.08),60);setTimeout(()=>playTone(920,0.12),60)}
+function sfxJackpot(){playTone(820,0.1);setTimeout(()=>playTone(1050,0.1),70);setTimeout(()=>playTone(1280,0.16),70)}
+function sfxHeart(){playTone(900,0.075);setTimeout(()=>playTone(1120,0.085),50)}
+function sfxError(){playTone(250,0.12,'sawtooth',0.055)}
 
 // ===== 词库 =====
 const WORDS={
-  basic:[
-    ['apple','苹果'],['book','书'],['cat','猫'],['dog','狗'],['egg','鸡蛋'],
+  basic:[['apple','苹果'],['book','书'],['cat','猫'],['dog','狗'],['egg','鸡蛋'],
     ['fish','鱼'],['girl','女孩'],['house','房子'],['ice','冰'],['juice','果汁'],
     ['key','钥匙'],['lion','狮子'],['moon','月亮'],['night','夜晚'],['orange','橙子'],
     ['pen','钢笔'],['queen','女王'],['rain','雨'],['sun','太阳'],['tree','树'],
@@ -239,10 +135,8 @@ const WORDS={
     ['hand','手'],['island','岛屿'],['jacket','夹克'],['kite','风筝'],['lamp','灯'],
     ['milk','牛奶'],['nose','鼻子'],['owl','猫头鹰'],['pig','猪'],['question','问题'],
     ['river','河流'],['ship','船'],['table','桌子'],['use','使用'],['voice','声音'],
-    ['window','窗户'],['box','盒子'],['yard','院子'],['zoo','动物园'],['bird','鸟']
-  ],
-  cet3:[
-    ['abandon','放弃'],['ability','能力'],['abroad','在国外'],['absent','缺席的'],['absorb','吸收'],
+    ['window','窗户'],['box','盒子'],['yard','院子'],['zoo','动物园'],['bird','鸟']],
+  cet3:[['abandon','放弃'],['ability','能力'],['abroad','在国外'],['absent','缺席的'],['absorb','吸收'],
     ['abstract','抽象的'],['accept','接受'],['access','通道'],['accident','事故'],['account','账户'],
     ['achieve','实现'],['acquire','获取'],['adapt','适应'],['addition','加法'],['address','地址'],
     ['adjust','调整'],['admire','钦佩'],['admit','承认'],['adopt','采纳'],['advance','前进'],
@@ -251,10 +145,8 @@ const WORDS={
     ['agriculture','农业'],['allow','允许'],['although','尽管'],['amount','数量'],['analyze','分析'],
     ['ancient','古代的'],['announce','宣布'],['annual','年度的'],['anxiety','焦虑'],['apart','分开地'],
     ['apparent','明显的'],['appeal','呼吁'],['appear','出现'],['apply','申请'],['approach','接近'],
-    ['appropriate','适当的'],['approve','批准'],['argue','争论'],['arrange','安排'],['article','文章']
-  ],
-  cet4:[
-    ['abnormal','反常的'],['abolish','废除'],['absence','缺席'],['absolute','绝对的'],['abstract','摘要'],
+    ['appropriate','适当的'],['approve','批准'],['argue','争论'],['arrange','安排'],['article','文章']],
+  cet4:[['abnormal','反常的'],['abolish','废除'],['absence','缺席'],['absolute','绝对的'],['abstract','摘要'],
     ['abundant','丰富的'],['academic','学术的'],['accelerate','加速'],['accent','口音'],['acceptable','可接受的'],
     ['accompany','陪伴'],['accomplish','完成'],['accurate','准确的'],['accuse','指控'],['ache','疼痛'],
     ['acknowledge','承认'],['acquaintance','熟人'],['activate','激活'],['acute','急性的'],['adaptation','适应'],
@@ -263,129 +155,119 @@ const WORDS={
     ['aggressive','侵略的'],['allocate','分配'],['alternative','替代的'],['ambassador','大使'],['ambiguous','模糊的'],
     ['ambition','雄心'],['amendment','修正案'],['ample','充足的'],['analogy','类比'],['anchor','锚'],
     ['anecdote','轶事'],['anguish','痛苦'],['animate','使生动'],['anonymous','匿名的'],['anticipate','预期'],
-    ['apparatus','器械'],['appetite','食欲'],['applaud','鼓掌'],['appliance','电器'],['applicable','适用的']
-  ]
+    ['apparatus','器械'],['appetite','食欲'],['applaud','鼓掌'],['appliance','电器'],['applicable','适用的']]
 };
 
 // ===== 宠物数据 =====
-const PETS={
-  common:[
-    {id:1,name:'小史莱姆',emoji:'🟢',rarity:'common',desc:'软绵绵的绿色小家伙',story:'从魔法森林的露水中诞生，喜欢在草地上滚来滚去。'},
-    {id:2,name:'小蝙蝠',emoji:'🦇',rarity:'common',desc:'怕光的夜行客',story:'白天躲在古堡阁楼里，晚上才会出来活动。'},
-    {id:3,name:'小蘑菇',emoji:'🍄',rarity:'common',desc:'森林里的红帽精灵',story:'雨后从树根下探出头来，带着泥土的芬芳。'},
-    {id:4,name:'小幽灵',emoji:'👻',rarity:'common',desc:'爱恶作剧的透明魂',story:'生前是个调皮的孩子，变成幽灵后依然爱捉弄人。'},
-  ],
-  rare:[
-    {id:5,name:'冰霜狼',emoji:'🐺',rarity:'rare',desc:'踏雪无痕的寒冰之狼',story:'生活在极北冰原，嚎叫能让瀑布瞬间冻结。'},
-    {id:6,name:'雷霆鹰',emoji:'🦅',rarity:'rare',desc:'翱翔九天的雷电之翼',story:'栖息在世界最高峰，翅膀拍打引发雷鸣。'},
-    {id:7,name:'烈焰虎',emoji:'🐯',rarity:'rare',desc:'威震山林的火焰猛虎',story:'火山深处诞生的王者，身上的火焰永不熄灭。'},
-  ],
-  epic:[
-    {id:8,name:'幻影龙',emoji:'🐉',rarity:'epic',desc:'穿梭虚实的神秘巨龙',story:'来自另一维度，能在现实与幻境间自由穿行。'},
-    {id:9,name:'圣光狮',emoji:'🦁',rarity:'epic',desc:'沐浴圣光的金色雄狮',story:'上古守护神殿的圣兽，鬃毛散发金色光芒。'},
-  ],
-  legendary:[
-    {id:10,name:'混沌神兽',emoji:'🦄',rarity:'legendary',desc:'掌控万象的终极存在',story:'宇宙诞生之初的原始之力，形态千变万化。'},
-  ]
-};
-const ALL_PETS=[...PETS.common,...PETS.rare,...PETS.epic,...PETS.legendary];
+const PETS=[
+  // 普通
+  {id:1,name:'小史莱姆',emoji:'🟢',rarity:'common',desc:'软绵绵的绿色小家伙',story:'从魔法森林的露水中诞生'},
+  {id:2,name:'小蝙蝠',emoji:'🦇',rarity:'common',desc:'怕光的夜行客',story:'白天躲在古堡阁楼里'},
+  {id:3,name:'小蘑菇',emoji:'🍄',rarity:'common',desc:'森林里的红帽精灵',story:'雨后从树根下探出头来'},
+  {id:4,name:'小幽灵',emoji:'👻',rarity:'common',desc:'爱恶作剧的透明魂',story:'生前是个调皮的孩子'},
+  // 稀有
+  {id:5,name:'冰霜狼',emoji:'🐺',rarity:'rare',desc:'踏雪无痕的寒冰之狼',story:'嚎叫能让瀑布瞬间冻结'},
+  {id:6,name:'雷霆鹰',emoji:'🦅',rarity:'rare',desc:'翱翔九天的雷电之翼',story:'翅膀拍打引发雷鸣'},
+  {id:7,name:'烈焰虎',emoji:'🐯',rarity:'rare',desc:'威震山林的火焰猛虎',story:'身上的火焰永不熄灭'},
+  {id:8,name:'月光狐',emoji:'🦊',rarity:'rare',desc:'沐浴月光的银白灵狐',story:'只在满月之夜现身'},
+  {id:9,name:'水晶蝶',emoji:'🦋',rarity:'rare',desc:'翅膀如水晶般剔透',story:'飞舞时洒落星光粉末'},
+  // 史诗
+  {id:10,name:'幻影龙',emoji:'🐉',rarity:'epic',desc:'穿梭虚实的神秘巨龙',story:'能在现实与幻境间自由穿行'},
+  {id:11,name:'圣光狮',emoji:'🦁',rarity:'epic',desc:'沐浴圣光的金色雄狮',story:'鬃毛散发金色光芒'},
+  // 传说
+  {id:12,name:'混沌神兽',emoji:'🦄',rarity:'legendary',desc:'掌控万象的终极存在',story:'宇宙诞生之初的原始之力'}
+];
 
 // ===== UP池 =====
 function getUpPet(){
-  const wn=Math.floor(Date.now()/(7*86400000));
-  const rs=[...PETS.rare,...PETS.epic,...PETS.legendary];
-  return rs[wn%rs.length];
+  const weekNum=Math.floor(Date.now()/(7*86400000));
+  const rares=PETS.filter(p=>p.rarity==='rare'||p.rarity==='epic'||p.rarity==='legendary');
+  return rares[weekNum%rares.length];
 }
 
 // ===== 存档 =====
 let S=loadSave();
 function defaultSave(){
   return{
-    coins:15,unlocked:[],favor:{},pity:0,items:{double:0,reset:0},
+    coins:20,unlocked:[],favor:{},pity:0,items:{double:0,reset:0},
     lastVisit:Date.now(),totalDraws:0,
     checkin:{lastDay:'',count:0,days:[]},
-    challenges:{draw:0,click:0,collect:0,date:''},
-    work:{active:false,endTime:0,petId:null},
     travel:{active:false,endTime:0,petId:null},
-    mood:{},
-    missTimer:0,
-    word:{lib:'basic',idx:0,know:0,wrong:[],today:0,stats:{}},
-    _rewardCommon:false,_rewardRare:false
+    missTimer:0,missEnabled:true,
+    word:{lib:'basic',idx:0,know:0,wrong:[],today:0,dailyGoal:50},
+    settings:{sound:true,vibration:true}
   };
 }
 function loadSave(){
   try{
-    const raw=localStorage.getItem('petSaveFull');
+    const raw=localStorage.getItem('monsterSaveV2');
     if(raw){
       const d=JSON.parse(raw);
       const def=defaultSave();
       for(let k in def)if(d[k]===undefined)d[k]=def[k];
-      const el=Math.floor((Date.now()-d.lastVisit)/60000);
-      if(el>1&&el<1440){
-        const bn=Math.min(Math.floor(el/3),20);
-        if(bn>0){d.coins+=bn;setTimeout(()=>sb(`⏰ 离线${el}分钟，获得${bn}币!`),500)}
+      const elapsed=Math.floor((Date.now()-d.lastVisit)/60000);
+      if(elapsed>1&&elapsed<1440){
+        const bonus=Math.min(Math.floor(elapsed/3),20);
+        if(bonus>0){d.coins+=bonus;setTimeout(()=>showToast(`⏰ 离线${elapsed}分钟，获得${bonus}币`),600)}
       }
-      for(let pid in d.mood)if(d.mood[pid]<100)d.mood[pid]=Math.min(100,d.mood[pid]+Math.floor(el/5));
       d.lastVisit=Date.now();
-      if(d.work.active&&Date.now()>d.work.endTime){d.coins+=5;d.work.active=false;setTimeout(()=>sb('💼 打工完成!获得5币!'),1000)}
-      if(d.travel.active&&Date.now()>d.travel.endTime){d.travel.active=false;const rw=Math.floor(Math.random()*3)+1;d.items.double=(d.items.double||0)+rw;setTimeout(()=>sb(`✈️ 旅行归来!获得${rw}张双倍卡!`),1500)}
+      // 旅行完成检测
+      if(d.travel.active&&Date.now()>d.travel.endTime){
+        d.travel.active=false;
+        const reward=Math.floor(Math.random()*3)+1;
+        d.items.double=(d.items.double||0)+reward;
+        setTimeout(()=>showToast(`✈️ 旅行归来！获得${reward}张双倍卡！`),1200);
+      }
       return d;
     }
   }catch(e){}
   return defaultSave();
 }
-function sv(){S.lastVisit=Date.now();localStorage.setItem('petSaveFull',JSON.stringify(S));}
-function sb(t){const e=document.createElement('div');e.className='bonus-text';e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),1800)}
+function save(){S.lastVisit=Date.now();localStorage.setItem('monsterSaveV2',JSON.stringify(S))}
 
-// ===== 宠物思念系统 =====
-function checkMiss(){
-  if(!currentPetId||S.missTimer>Date.now())return;
-  const pet=ALL_PETS.find(p=>p.id===currentPetId);
-  if(!pet)return;
-  const fav=S.favor[currentPetId]||0;
-  if(fav<2)return;
-  const r=Math.random();
-  if(r<0.15){
-    document.getElementById('missEmoji').textContent=pet.emoji;
-    const msgs=['主人，我想你了...','今天有好好背单词吗？','我在等你来看我~','一起学习好不好？'];
-    document.getElementById('missText').textContent=msgs[Math.floor(Math.random()*msgs.length)];
-    const subs=['来复习一个单词吧！','让我看看你学了什么~','我来帮你记单词！'];
-    document.getElementById('missSub').textContent=subs[Math.floor(Math.random()*subs.length)];
-    document.getElementById('missOverlay').style.display='flex';
-    S.missTimer=Date.now()+300000;
-    sv();
+// ===== Toast 提示 =====
+function showToast(msg){
+  const el=document.createElement('div');el.className='toast';el.textContent=msg;
+  document.body.appendChild(el);setTimeout(()=>el.remove(),1600)
+}
+
+// ===== 每日目标 =====
+function setDailyGoal(n){
+  if(typeof n==='number'&&n>0){
+    S.word.dailyGoal=n;
+    save();
+    updateDailyGoalUI();
+    showToast(`✅ 每日目标设为 ${n} 词`);
   }
 }
-function closeMiss(){
-  document.getElementById('missOverlay').style.display='none';
-}
-function missReview(){
-  closeMiss();
-  // 复习一个错题本里的词
-  if(S.word.wrong&&S.word.wrong.length>0){
-    const w=S.word.wrong[Math.floor(Math.random()*S.word.wrong.length)];
-    const allWords=[...WORDS.basic,...WORDS.cet3,...WORDS.cet4];
-    const found=allWords.find(x=>x[0]===w);
-    if(found){
-      switchTab('learn',document.querySelector('.nav-btn'));
-      document.getElementById('wordEn').textContent=found[0];
-      document.getElementById('wordCn').textContent=found[1];
-      sb('📕 复习错题: '+found[0]+' = '+found[1]);
-      try{const u=new SpeechSynthesisUtterance(found[0]);u.lang='en-US';u.rate=0.8;speechSynthesis.speak(u)}catch(e){}
+function updateDailyGoalUI(){
+  const today=S.word.today||0;
+  const goal=S.word.dailyGoal||50;
+  const pct=Math.min(100,Math.round(today/goal*100));
+  // 如果已有目标显示区域则更新
+  const el=document.getElementById('goalDisplay');
+  if(el)el.innerHTML=`📊 今日进度: ${today}/${goal} (${pct}%)`;
+  // 检查是否完成
+  if(today>=goal&&today>0){
+    const flag=document.getElementById('goalComplete');
+    if(!flag){
+      const banner=document.createElement('div');
+      banner.id='goalComplete';
+      banner.style.cssText='background:gold;color:#1a1a3e;padding:6px;border-radius:10px;font-size:13px;font-weight:bold;margin:6px 0;animation:popIn 0.3s';
+      banner.textContent='🎉 今日目标已完成！太棒了！';
+      const parent=document.getElementById('goalArea');
+      if(parent)parent.appendChild(banner);
     }
-  }else{
-    sb('🎉 错题本为空！继续加油！');
   }
 }
 
-// ===== 英语学习 - 核心功能 =====
+// ===== 英语学习 =====
 let currentLib='basic',wordIdx=0;
 function selectLib(lib,btn){
-  sc();
-  document.querySelectorAll('.lib-btn').forEach(b=>b.classList.remove('active'));
+  sfxClick();
+  document.querySelectorAll('.lib-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  currentLib=lib;
-  wordIdx=0;
+  currentLib=lib;wordIdx=0;
   showWord();
 }
 function showWord(){
@@ -396,12 +278,13 @@ function showWord(){
   document.getElementById('wordEn').textContent=w[0];
   document.getElementById('wordCn').textContent='???';
   document.getElementById('wordProgress').textContent=`进度: ${wordIdx+1}/${lib.length}`;
-  try{
-    const u=new SpeechSynthesisUtterance(w[0]);u.lang='en-US';u.rate=0.8;speechSynthesis.speak(u);
-  }catch(e){}
+  speakWord(w[0]);
+}
+function speakWord(text){
+  try{const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=0.8;speechSynthesis.speak(u)}catch(e){}
 }
 function markWord(know){
-  sc();
+  sfxClick();
   const lib=WORDS[currentLib];
   if(!lib||wordIdx>=lib.length)return;
   const w=lib[wordIdx];
@@ -409,53 +292,37 @@ function markWord(know){
   if(!know){
     if(!S.word.wrong)S.word.wrong=[];
     if(!S.word.wrong.includes(w[0]))S.word.wrong.push(w[0]);
-    sb('❌ 已加入错题本');
+    showToast('❌ 已加入错题本');
   }else{
     S.word.know=(S.word.know||0)+1;
     S.word.today=(S.word.today||0)+1;
-    // 答对奖励 - 可能有双倍
     let bonus=1;
-    if(S.items.double&&S.items.double>0&&Math.random()<0.2){
+    if(S.items.double&&S.items.double>0&&Math.random()<0.25){
       bonus=2;S.items.double--;
-      sb('🎫 双倍卡生效! +2币');
+      showToast('🎫 双倍卡生效！+2币');
     }
     S.coins+=bonus;
-    sb(`✅ 答对了! +${bonus}币`);
-    // 随机触发宠物思念
+    showToast(`✅ 答对了！+${bonus}币`);
+    updateDailyGoalUI();
     checkMiss();
   }
   updateWordStats();
-  sv();
-  ui();
+  save();updateUI();
 }
-function nextWord(){
-  sc();
-  wordIdx++;
-  showWord();
-}
+function nextWord(){sfxClick();wordIdx++;showWord()}
 function reviewWrong(){
-  if(!S.word.wrong||S.word.wrong.length===0){
-    document.getElementById('result').textContent='🎉 错题本为空!';
-    return;
-  }
+  if(!S.word.wrong||S.word.wrong.length===0){showToast('🎉 错题本为空！');return}
   const w=S.word.wrong[0];
-  const allWords=[...WORDS.basic,...WORDS.cet3,...WORDS.cet4];
-  const found=allWords.findIndex(x=>x[0]===w);
-  if(found>=0){
-    // 找到对应的词库
-    for(let lib of ['basic','cet3','cet4']){
-      const idx=WORDS[lib].findIndex(x=>x[0]===w);
-      if(idx>=0){
-        currentLib=lib;
-        document.querySelectorAll('.lib-btn').forEach(b=>b.classList.remove('active'));
-        document.querySelectorAll('.lib-btn')[['basic','cet3','cet4'].indexOf(lib)].classList.add('active');
-        wordIdx=idx;
-        showWord();
-        break;
-      }
+  const all=[...WORDS.basic,...WORDS.cet3,...WORDS.cet4];
+  for(let lib of ['basic','cet3','cet4']){
+    const idx=WORDS[lib].findIndex(x=>x[0]===w);
+    if(idx>=0){
+      currentLib=lib;
+      document.querySelectorAll('.lib-tab').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.lib-tab')[['basic','cet3','cet4'].indexOf(lib)].classList.add('active');
+      wordIdx=idx;showWord();break;
     }
   }
-  document.getElementById('result').textContent='📕 复习错题中...';
 }
 function updateWordStats(){
   const total=WORDS[currentLib].length;
@@ -466,75 +333,273 @@ function updateWordStats(){
   document.getElementById('wordCount').textContent=S.word.today||0;
 }
 
-// ===== 宠物系统 =====
+// ===== 宠物思念系统 =====
 let currentPetId=null;
+function checkMiss(){
+  if(!currentPetId||!S.missEnabled||S.missTimer>Date.now())return;
+  const pet=PETS.find(p=>p.id===currentPetId);
+  if(!pet)return;
+  const fav=S.favor[currentPetId]||0;
+  if(fav<2)return;
+  if(Math.random()<0.18){
+    document.getElementById('missIcon').textContent=pet.emoji;
+    const msgs=['主人，我想你了...','今天有好好背单词吗？','我在等你来看我~','一起学习好不好？','🎃 不给糖就捣蛋~'];
+    document.getElementById('missMsg').textContent=msgs[Math.floor(Math.random()*msgs.length)];
+    const hints=['来复习一个单词吧！','让我看看你学了什么~','我来帮你记单词！'];
+    document.getElementById('missHint').textContent=hints[Math.floor(Math.random()*hints.length)];
+    document.getElementById('missMask').style.display='flex';
+    S.missTimer=Date.now()+300000;
+    save();
+  }
+}
+function closeMiss(){document.getElementById('missMask').style.display='none'}
+function missReview(){
+  closeMiss();
+  if(S.word.wrong&&S.word.wrong.length>0){
+    const w=S.word.wrong[Math.floor(Math.random()*S.word.wrong.length)];
+    const all=[...WORDS.basic,...WORDS.cet3,...WORDS.cet4];
+    const found=all.find(x=>x[0]===w);
+    if(found){
+      switchTab('learn');
+      document.getElementById('wordEn').textContent=found[0];
+      document.getElementById('wordCn').textContent=found[1];
+      showToast('📕 复习错题: '+found[0]+' = '+found[1]);
+      speakWord(found[0]);
+    }
+  }else{showToast('🎉 错题本为空！继续加油！')}
+}
+
+// ===== 宠物显示 =====
 function showPet(pet,isNew){
   currentPetId=pet.id;
   const fav=S.favor[pet.id]||0;
   const level=Math.floor(fav/3)+1;
   const evolved=level>=10;
   const emoji=evolved?pet.emoji+pet.emoji:pet.emoji;
-  const mood=S.mood[pet.id]||100;
-  const mt=mood>80?'😊开心':mood>50?'😐一般':mood>20?'😞低落':'😢想你';
-  const wa=S.work.active&&S.work.petId===pet.id;
-  const wr=wa?Math.max(0,Math.floor((S.work.endTime-Date.now())/1000)):0;
   const ta=S.travel.active&&S.travel.petId===pet.id;
   const tr=ta?Math.max(0,Math.floor((S.travel.endTime-Date.now())/1000)):0;
   const d=document.getElementById('petDisplay');
+  const rarityNames={common:'普通',rare:'稀有',epic:'史诗',legendary:'传说'};
   d.innerHTML=`
     <div class="pet-card" style="display:block">
-      <span class="pet-emoji" onclick="petClick(${pet.id})" style="${evolved?'font-size:68px;filter:drop-shadow(0 0 6px gold)':''}" id="pe">${emoji}</span>
+      <span class="pet-emoji" onclick="petClick(${pet.id})" style="${evolved?'font-size:62px;filter:drop-shadow(0 0 8px gold)':''}" id="petEmojiEl">${emoji}</span>
       <div class="pet-name">${pet.name} ${evolved?'✨':'Lv.'+level}</div>
-      <div class="pet-rarity rarity-${pet.rarity}">${['普通','稀有','史诗','传说'][['common','rare','epic','legendary'].indexOf(pet.rarity)]}</div>
-      <div style="font-size:12px">${pet.desc}</div>
-      <div class="mood-text">${mt}</div>
-      <div class="favor-text">❤️ 好感 ${fav}/30 ${evolved?'已进化!':'(点击增加)'}</div>
-      ${isNew?`<div style="color:gold;font-weight:bold;margin-top:3px;font-size:12px">✨ 新获得!</div>`:''}
-      ${isNew&&pet.story?`<div class="story-text">📖 ${pet.story}</div>`:''}
-      ${wa?`<div class="work-status">💼 打工中... 剩余${Math.floor(wr/60)}分${wr%60}秒</div>`:
-        ta?`<div class="travel-section">✈️ 旅行中... 剩余${Math.floor(tr/60)}分${tr%60}秒</div>`:
-        `<button class="btn btn-small" onclick="startWork(${pet.id})" style="margin-top:3px;font-size:10px;padding:3px 10px">💼 打工(30分钟)</button>
-         <span class="travel-section" onclick="startTravel(${pet.id})">✈️ 去旅行(20分钟)</span>`}
-      ${!wa&&!ta?`<div class="travel-result" id="travelResult"></div>`:''}
+      <div class="pet-rarity-badge r-${pet.rarity}">${rarityNames[pet.rarity]}</div>
+      <div style="font-size:11px;color:#ccc">${pet.desc}</div>
+      <div class="favor-bar">❤️ 好感 ${fav}/30 ${evolved?'已进化！':'(点击增加)'}</div>
+      ${isNew&&pet.story?`<div class="pet-story">📖 ${pet.story}</div>`:''}
+      <div class="action-btns">
+        ${ta?`<span style="font-size:11px;color:#88ccff">✈️ 旅行中... 剩余${Math.floor(tr/60)}分${tr%60}秒</span>`:
+          `<button class="action-btn" onclick="startTravel(${pet.id})">✈️ 去旅行(20分钟)</button>`}
+      </div>
     </div>
   `;
 }
 function petClick(id){
-  sh();
+  sfxHeart();
   S.favor[id]=(S.favor[id]||0)+1;
-  S.mood[id]=Math.min(100,(S.mood[id]||100)+5);
   const fav=S.favor[id];
   const level=Math.floor(fav/3)+1;
-  const e=document.getElementById('pe');
-  if(e){
+  // 爱心粒子
+  const emojiEl=document.getElementById('petEmojiEl');
+  if(emojiEl){
     for(let i=0;i<3;i++){
-      const h=document.createElement('div');h.className='hearts';h.textContent='❤️';
-      h.style.left=(e.offsetLeft+15+Math.random()*30)+'px';h.style.top=(e.offsetTop+3)+'px';
+      const h=document.createElement('div');h.className='heart-particle';h.textContent='❤️';
+      h.style.left=(emojiEl.offsetLeft+15+Math.random()*30)+'px';
+      h.style.top=(emojiEl.offsetTop+5)+'px';
       document.getElementById('petDisplay').appendChild(h);
-      setTimeout(()=>h.remove(),700);
+      setTimeout(()=>h.remove(),800);
     }
   }
-  if(level>=10&&fav%3===0){
-    showPet(ALL_PETS.find(p=>p.id===id),false);
-    setTimeout(()=>sb(`🌟 ${ALL_PETS.find(p=>p.id===id).name} 已进化!`),300);
-  }
-  if(Math.random()<0.12)setTimeout(()=>startMinigame(id),400);
-  S.challenges.click=(S.challenges.click||0)+1;
-  checkChallenge();
-  const ft=document.querySelector('.favor-text');
-  if(ft)ft.textContent=`❤️ 好感 ${fav}/30 ${level>=10?'已进化!':'(点击增加)'}`;
-  sv();updateUI();
+  if(level>=10&&fav%3===0)showToast(`🌟 ${PETS.find(p=>p.id===id).name} 已进化！`);
+  save();updateUI();
 }
-function startWork(id){
-  if(S.work.active){alert('已经有宠物在打工了!');return;}
-  if(S.travel.active){alert('宠物正在旅行中!');return;}
-  sc();S.work={active:true,endTime:Date.now()+1800000,petId:id};
-  sv();updateUI();showPet(ALL_PETS.find(p=>p.id===id),false);
-  sb('💼 已派去打工，30分钟后回来!');
-}
+
+// ===== 旅行系统 =====
 function startTravel(id){
-  if(S.travel.active){alert('已经有宠物在旅行了!');return;}
-  if(S.work.active){alert('宠物正在打工中!');return;}
-  sc();S.travel={active:true,endTime:Date.now()+1200000,petId:id};
-  sv();updateUI();showPet(ALL_PETS.find(p=>p.id===id),false);
-  sb('✈️ 已出发旅行，20分钟后带回双倍卡!
+  if(S.travel.active){showToast('⚠️ 已经有宠物在旅行了！');return}
+  sfxClick();
+  S.travel={active:true,endTime:Date.now()+1200000,petId:id}; // 20分钟
+  save();
+  showToast('✈️ 宠物出发旅行了！20分钟后回来~');
+  showPet(PETS.find(p=>p.id===id),false);
+}
+
+// ===== 老虎机抽卡 =====
+function startDraw(){
+  if(S.coins<1){showToast('❌ 金币不足！去背单词赚钱吧~');sfxError();return}
+  sfxClick();
+  S.coins--;S.totalDraws=(S.totalDraws||0)+1;
+  document.getElementById('drawBtn').disabled=true;
+  // 转盘动画
+  const s1=document.getElementById('s1'),s2=document.getElementById('s2'),s3=document.getElementById('s3');
+  s1.classList.add('spin');s2.classList.add('spin');s3.classList.add('spin');
+  const emojis=['🟢','🦇','🍄','👻','🐺','🦅','🐯','🦊','🦋','🐉','🦁','🦄'];
+  let count=0;
+  const interval=setInterval(()=>{
+    s1.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    s2.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    s3.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    count++;
+    if(count>15){
+      clearInterval(interval);
+      // 计算结果
+      const upPet=getUpPet();
+      const pool=[...PETS];
+      // 保底
+      S.pity=(S.pity||0)+1;
+      let result;
+      if(S.pity>=10){
+        result=pool.filter(p=>p.rarity==='rare'||p.rarity==='epic'||p.rarity==='legendary');
+        result=result[Math.floor(Math.random()*result.length)];
+        S.pity=0;
+      }else{
+        const r=Math.random();
+        if(r<0.005)result=pool.filter(p=>p.rarity==='legendary')[0];
+        else if(r<0.025)result=pool.filter(p=>p.rarity==='epic')[Math.floor(Math.random()*2)];
+        else if(r<0.125)result=pool.filter(p=>p.rarity==='rare')[Math.floor(Math.random()*5)];
+        else result=pool.filter(p=>p.rarity==='common')[Math.floor(Math.random()*4)];
+        // UP池加成
+        if(Math.random()<0.33&&upPet)result=upPet;
+      }
+      s1.classList.remove('spin');s2.classList.remove('spin');s3.classList.remove('spin');
+      s1.textContent=result.emoji;s2.textContent=result.emoji;s3.textContent=result.emoji;
+      s1.classList.add('jackpot');s2.classList.add('jackpot');s3.classList.add('jackpot');
+      sfxJackpot();
+      // 解锁宠物
+      if(!S.unlocked.includes(result.id)){
+        S.unlocked.push(result.id);
+        showToast(`🎉 获得新宠物：${result.name}！`);
+        showPet(result,true);
+      }else{
+        // 重复转化为好感度
+        S.favor[result.id]=(S.favor[result.id]||0)+2;
+        showToast(`💕 重复获得${result.name}，好感+2`);
+        showPet(result,false);
+      }
+      document.getElementById('result').textContent=`✨ 获得：${result.name}`;
+      document.getElementById('pityCount').textContent=S.pity;
+      document.getElementById('drawBtn').disabled=false;
+      setTimeout(()=>{s1.classList.remove('jackpot');s2.classList.remove('jackpot');s3.classList.remove('jackpot')},2000);
+      save();updateUI();
+    }
+  },80);
+}
+
+// ===== 签到 =====
+function renderCheckin(){
+  const grid=document.getElementById('checkinGrid');
+  if(!grid)return;
+  const days=S.checkin.days||[];
+  let html='';
+  for(let i=0;i<7;i++){
+    const done=days.includes(i);
+    const isToday=i===new Date().getDay();
+    html+=`<div class="checkin-cell ${done?'done':''} ${isToday?'today':''}">${done?'✅':'⬜'} Day ${i+1}</div>`;
+  }
+  grid.innerHTML=html;
+}
+function doCheckin(){
+  const todayKey=new Date().toDateString();
+  if(S.checkin.lastDay===todayKey){showToast('⚠️ 今天已经签到了！');return}
+  sfxWin();
+  S.checkin.lastDay=todayKey;
+  S.checkin.count=(S.checkin.count||0)+1;
+  const dayOfWeek=new Date().getDay();
+  if(!S.checkin.days)S.checkin.days=[];
+  if(!S.checkin.days.includes(dayOfWeek))S.checkin.days.push(dayOfWeek);
+  const bonus=5+S.checkin.count;
+  S.coins+=bonus;
+  showToast(`📅 签到成功！+${bonus}币（连续${S.checkin.count}天）`);
+  renderCheckin();
+  save();updateUI();
+}
+
+// ===== 导航切换 =====
+function switchTab(tab){
+  sfxClick();
+  document.querySelectorAll('.screen').forEach(s=>s.style.display='none');
+  const map={learn:'learnPanel',slot:'slotPanel',checkin:'checkinPanel',dex:'dexPanel',settings:'settingsPanel'};
+  const el=document.getElementById(map[tab]);
+  if(el)el.style.display='block';
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const navMap={learn:0,slot:1,checkin:2,dex:3,settings:4};
+  const items=document.querySelectorAll('.nav-item');
+  if(items[navMap[tab]])items[navMap[tab]].classList.add('active');
+  // 渲染对应面板
+  if(tab==='dex')renderDex();
+  if(tab==='checkin')renderCheckin();
+}
+
+// ===== 图鉴 =====
+function renderDex(){
+  const grid=document.getElementById('dexGrid');
+  if(!grid)return;
+  let html='';
+  PETS.forEach(p=>{
+    const owned=S.unlocked.includes(p.id);
+    html+=`<div class="dex-item ${owned?'owned':''}"><span class="dex-emoji">${owned?p.emoji:'❓'}</span>${owned?p.name:'???'}</div>`;
+  });
+  grid.innerHTML=html;
+  document.getElementById('unlockedCount').textContent=S.unlocked.length;
+}
+
+// ===== UI更新 =====
+function updateUI(){
+  document.getElementById('coins').textContent=S.coins;
+  document.getElementById('wordCount').textContent=S.word.today||0;
+  document.getElementById('pityCount').textContent=S.pity||0;
+  updateWordStats();
+  updateDailyGoalUI();
+}
+
+// ===== 初始化 =====
+function init(){
+  // 创建万圣节装饰
+  const halloweenBg=document.createElement('div');
+  halloweenBg.className='halloween-banner';
+  document.body.appendChild(halloweenBg);
+  const halloweenEmojis=['🎃','👻','🕸️','🧛','🦇'];
+  halloweenEmojis.forEach((e,i)=>{
+    const el=document.createElement('div');
+    el.className='halloween-emoji';
+    el.textContent=e;
+    el.style.left=(10+i*20)+'%';
+    el.style.bottom=(10+Math.random()*30)+'%';
+    el.style.animationDelay=(i*1.5)+'s';
+    document.body.appendChild(el);
+  });
+  // 显示初始宠物
+  if(S.unlocked.length>0){
+    const firstPet=PETS.find(p=>p.id===S.unlocked[0]);
+    if(firstPet)showPet(firstPet,false);
+  }
+  updateUI();
+  // 思念定时器
+  setInterval(checkMiss,30000);
+  // 每日目标UI
+  const goalArea=document.createElement('div');
+  goalArea.id='goalArea';
+  goalArea.style.cssText='margin:8px 0;text-align:center';
+  goalArea.innerHTML=`
+    <div style="font-size:12px;color:#aaa;margin-bottom:4px">🎯 每日目标</div>
+    <div style="display:flex;gap:4px;justify-content:center;margin-bottom:4px">
+      <button class="action-btn" onclick="setDailyGoal(20)">20词</button>
+      <button class="action-btn" onclick="setDailyGoal(50)">50词</button>
+      <button class="action-btn" onclick="setDailyGoal(100)">100词</button>
+    </div>
+    <div class="input-row" style="display:flex;gap:4px;justify-content:center;margin-bottom:4px">
+      <input type="number" id="customGoalInput" placeholder="自定义" style="width:80px;padding:4px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:#fff;font-size:12px;text-align:center">
+      <button class="action-btn" onclick="const v=parseInt(document.getElementById('customGoalInput').value);if(v>0)setDailyGoal(v)">确定</button>
+    </div>
+    <div id="goalDisplay" style="font-size:13px;color:gold"></div>
+  `;
+  document.getElementById('learnPanel').insertBefore(goalArea,document.getElementById('learnPanel').firstChild);
+  updateDailyGoalUI();
+}
+
+// 页面加载完成后执行
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>
