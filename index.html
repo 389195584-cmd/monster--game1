@@ -1,273 +1,1808 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>单词怪兽·万圣版</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>宠物英语学习 - 完整整合版</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
-body{background:#1a1a3e;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center}
-.app{width:100%;max-width:420px;padding:12px;padding-bottom:80px}
-.header{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.05);padding:10px 14px;border-radius:12px;margin-bottom:10px}
-.coin{color:gold;font-weight:bold}
-.card{background:rgba(255,255,255,.05);border-radius:14px;padding:16px;margin-bottom:10px;border:1px solid rgba(255,255,255,.08)}
-.word-en{font-size:30px;font-weight:bold;color:gold;text-align:center;margin-bottom:4px}
-.word-ph{font-size:13px;color:#aaa;text-align:center;margin-bottom:14px}
-.options{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.opt{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;padding:12px;border-radius:10px;font-size:15px;cursor:pointer;text-align:center}
-.opt:active{background:rgba(255,215,0,.15)}
-.pet-area{text-align:center;padding:10px 0}
-.pet-emoji{font-size:64px;display:block;animation:breathe 2s ease-in-out infinite}
-@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
-.pet-name{font-size:14px;color:#ccc;margin-top:2px}
-.gacha-area{text-align:center;padding:10px}
-.slot-reels{font-size:44px;letter-spacing:12px;margin:10px 0}
-.btn-gacha{background:linear-gradient(135deg,#e94560,#c23152);color:#fff;border:none;padding:12px 38px;border-radius:28px;font-size:16px;font-weight:bold;cursor:pointer;box-shadow:0 4px 15px rgba(233,69,96,.4)}
-.btn-gacha:active{transform:scale(.92)}
-.btn-sm{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;margin:2px}
-.nav{position:fixed;bottom:0;left:0;width:100%;display:flex;justify-content:space-around;background:rgba(26,26,62,.97);padding:8px 0;border-top:1px solid rgba(255,255,255,.08)}
-.nav-item{background:none;border:none;color:#777;font-size:11px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
-.nav-item .icon{font-size:20px}
-.nav-item.active{color:gold}
-.hidden{display:none!important}
-.toast{position:fixed;top:30%;left:50%;transform:translate(-50%,-50%);font-size:22px;font-weight:bold;color:gold;text-shadow:0 0 20px gold;pointer-events:none;animation:toastFade 1.4s forwards;z-index:999}
-@keyframes toastFade{0%{transform:translate(-50%,-50%) scale(.4);opacity:0}25%{transform:translate(-50%,-50%) scale(1.1);opacity:1}100%{transform:translate(-50%,-70%) scale(1);opacity:0}}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;-webkit-tap-highlight-color:transparent;}
+body{background:linear-gradient(145deg,#f7e9d7,#ecdcc5);min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:12px 8px 20px;color:#3d2c1c;}
+.container{max-width:440px;width:100%;background:rgba(255,248,235,.92);backdrop-filter:blur(8px);border-radius:36px;padding:16px 14px 22px;box-shadow:0 12px 32px rgba(80,50,30,.25);border:1px solid rgba(220,190,160,.4);position:relative;overflow:hidden;}
+.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.top-bar h1{font-size:20px;font-weight:700;color:#5a3e2b;letter-spacing:.5px;}
+.top-right{display:flex;gap:6px;align-items:center;}
+.coin-display{background:#f5d742;padding:4px 12px;border-radius:60px;font-weight:700;color:#3d2b1a;font-size:15px;box-shadow:inset 0 -2px 0 #c9a832;}
+.daily-badge{background:#b3d9a8;padding:4px 10px;border-radius:30px;font-size:12px;color:#24401c;font-weight:600;cursor:pointer;}
+.nav-tabs{display:flex;gap:5px;margin-bottom:12px;background:#ede0cf;border-radius:48px;padding:4px;}
+.nav-tab{flex:1;text-align:center;padding:9px 0;border-radius:44px;font-weight:500;font-size:13px;color:#7a6248;cursor:pointer;background:transparent;border:none;transition:.2s;}
+.nav-tab.active{background:#fff6ea;color:#4d3422;box-shadow:0 2px 8px rgba(90,60,35,.13);font-weight:700;}
+.panel{display:none;animation:fadeUp .25s ease;}
+.panel.active-panel{display:block;}
+@keyframes fadeUp{0%{opacity:0;transform:translateY(10px);}100%{opacity:1;transform:translateY(0);}}
+/* pet */
+.pet-card{background:#fdf3e6;border-radius:26px;padding:14px;box-shadow:inset 0 2px 6px rgba(180,140,100,.08),0 6px 12px rgba(70,45,25,.1);margin-bottom:12px;}
+.pet-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.pet-name{font-size:19px;font-weight:700;color:#402e1e;}
+.pet-level{background:#cbb295;padding:2px 12px;border-radius:26px;color:#fff;font-weight:600;font-size:13px;}
+.pet-scene{background:linear-gradient(180deg,#d9f0ff,#b9e6d3);border-radius:20px;height:150px;position:relative;overflow:hidden;margin-bottom:10px;border:2px solid #fff;}
+.pet-sprite{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-size:64px;transition:.3s;cursor:pointer;}
+.pet-sprite.happy{transform:translateX(-50%) translateY(-8px) scale(1.08);}
+.pet-sprite.sad{filter:grayscale(.4);}
+.deco{position:absolute;font-size:22px;}
+.stat-row{display:flex;gap:8px;margin:8px 0;flex-wrap:wrap;}
+.stat-item{background:#e9daca;padding:4px 12px;border-radius:38px;font-size:13px;color:#382b1e;display:flex;align-items:center;gap:4px;}
+.exp-bar{width:100%;height:10px;background:#dacbbc;border-radius:34px;overflow:hidden;margin:6px 0 3px;}
+.exp-fill{height:100%;width:0;background:linear-gradient(90deg,#facc6f,#f7b731);border-radius:33px;transition:.4s;}
+.pet-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.pet-btn{flex:1;min-width:64px;background:#e8d7c2;border:none;border-radius:46px;padding:9px 0;font-weight:600;color:#3f2d1b;font-size:14px;cursor:pointer;box-shadow:0 2px 0 #c7b39d;}
+.pet-btn:active{transform:scale(.95);}
+.chat-bubble{background:#f3e6d6;border-radius:20px;padding:10px 12px;text-align:center;font-size:14px;color:#4b3927;margin-top:8px;min-height:42px;}
+/* home */
+.room-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0;}
+.room-slot{background:#efe2d1;border:2px dashed #cbb295;border-radius:18px;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:24px;cursor:pointer;color:#8a7157;transition:.2s;}
+.room-slot.filled{border-style:solid;border-color:#b99a7e;background:#fff6ea;}
+.room-slot small{font-size:11px;margin-top:2px;}
+.shop-items{display:flex;gap:8px;overflow-x:auto;padding:6px 0;}
+.shop-item{flex:0 0 auto;background:#fdf3e6;border-radius:16px;padding:10px;width:96px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.06);}
+.shop-item .ic{font-size:30px;}
+.shop-item .nm{font-size:12px;color:#4d3624;margin:4px 0;}
+.shop-item .pr{font-size:12px;color:#c0392b;font-weight:700;}
+.shop-item button{margin-top:4px;background:#b99a7e;color:#fff;border:none;border-radius:12px;padding:4px 8px;font-size:12px;cursor:pointer;}
+/* battle */
+.battle-area{background:#2c3e50;border-radius:24px;padding:14px;color:#fff;text-align:center;margin-bottom:12px;position:relative;overflow:hidden;}
+.battle-area::before{content:'⚔️';position:absolute;top:8px;right:12px;font-size:22px;opacity:.4;}
+.monster{font-size:60px;margin:6px 0;transition:.2s;}
+.monster.attack{transform:translateX(12px) scale(1.1);}
+.monster.hurt{transform:scale(.9);opacity:.7;}
+.hp-bar{width:100%;height:12px;background:#5a2a2a;border-radius:30px;overflow:hidden;margin:6px 0;}
+.hp-fill{height:100%;background:linear-gradient(90deg,#e74c3c,#c0392b);transition:.3s;}
+.battle-word{background:#fff;border-radius:16px;padding:12px;margin:10px 0;color:#352415;}
+.battle-word .ew{font-size:24px;font-weight:700;}
+.battle-word .cw{font-size:16px;color:#70553b;margin-top:4px;}
+.battle-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.battle-opt{background:#eee2d3;border:none;border-radius:16px;padding:12px;font-size:16px;font-weight:600;color:#372818;cursor:pointer;}
+.battle-opt.correct{background:#8fc77b;color:#fff;}
+.battle-opt.wrong{background:#d98b7a;color:#fff;}
+.battle-opt:disabled{opacity:.6;}
+.combo-display{font-size:14px;color:#f1c40f;margin-top:6px;font-weight:700;}
+/* learn */
+.learn-card{background:#fef6ec;border-radius:24px;padding:16px;text-align:center;box-shadow:0 4px 10px rgba(75,55,35,.06);margin-bottom:10px;}
+.learn-card .ew{font-size:28px;font-weight:700;color:#352415;}
+.learn-card .cw{font-size:18px;color:#70553b;margin:6px 0 10px;}
+.learn-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0;}
+.learn-opt{background:#eee2d3;border:none;border-radius:16px;padding:12px;font-size:16px;font-weight:500;cursor:pointer;}
+.learn-opt.correct{background:#8fc77b;color:#fff;}
+.learn-opt.wrong{background:#d98b7a;color:#fff;}
+.learn-opt:disabled{opacity:.6;}
+.learn-progress{display:flex;justify-content:space-between;font-size:13px;color:#735d47;margin-top:6px;}
+/* memory & match */
+.game-board{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0;}
+.mem-card{aspect-ratio:1;background:#cbb295;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:transparent;cursor:pointer;transition:.3s;box-shadow:0 3px 6px rgba(0,0,0,.12);}
+.mem-card.flipped{background:#fef6ec;color:#352415;}
+.mem-card.matched{background:#8fc77b;color:#fff;}
+.match-board{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:12px 0;}
+.match-cell{aspect-ratio:1;background:#e8d7c2;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;transition:.15s;}
+.match-cell.selected{background:#f7b731;transform:scale(1.1);}
+.match-cell.cleared{opacity:0;pointer-events:none;}
+.mini-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:14px;color:#4d3624;}
+.mini-header button{background:#b99a7e;color:#fff;border:none;border-radius:12px;padding:5px 12px;font-size:13px;cursor:pointer;}
+/* friend */
+.friend-search{display:flex;gap:6px;margin-bottom:12px;}
+.friend-search input{flex:1;padding:9px 12px;border-radius:20px;border:1px solid #d6c2ad;background:#fffaf2;font-size:14px;outline:none;}
+.friend-search button{background:#b99a7e;border:none;border-radius:20px;padding:0 16px;color:#fff;font-weight:600;font-size:14px;cursor:pointer;}
+.friend-list{list-style:none;max-height:180px;overflow-y:auto;}
+.friend-item{display:flex;justify-content:space-between;align-items:center;background:#efe4d4;border-radius:30px;padding:7px 12px;margin-bottom:6px;}
+.friend-item span{font-weight:500;color:#3d2c1c;font-size:13px;}
+.friend-item button{background:#cdb59b;border:none;border-radius:20px;padding:3px 10px;color:#fff;font-size:12px;cursor:pointer;}
+.gift-area{margin-top:12px;background:#eadbc9;border-radius:18px;padding:10px;text-align:center;}
+.gift-area p{font-size:13px;color:#513f2d;margin-bottom:5px;}
+.gift-btn{background:#e09f6e;border:none;border-radius:20px;padding:7px 20px;color:#fff;font-weight:600;font-size:14px;cursor:pointer;}
+/* bag */
+.bag-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0;}
+.bag-item{background:#efe2d1;border-radius:16px;padding:10px 4px;text-align:center;font-size:13px;color:#3f2e1d;box-shadow:0 2px 4px rgba(0,0,0,.06);}
+.bag-item .item-icon{font-size:26px;display:block;margin-bottom:3px;}
+.bag-item .item-count{background:#d6c0aa;border-radius:20px;padding:1px 8px;font-size:12px;}
+/* modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:50;padding:20px;}
+.modal-overlay.show{display:flex;}
+.modal{background:#fdf3e6;border-radius:24px;padding:20px;max-width:340px;width:100%;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.3);}
+.modal .big{font-size:48px;margin-bottom:8px;}
+.modal h3{color:#4d3624;margin-bottom:8px;}
+.modal p{color:#6b5540;font-size:14px;margin-bottom:12px;}
+.modal button{background:#b99a7e;color:#fff;border:none;border-radius:20px;padding:9px 24px;font-size:15px;font-weight:600;cursor:pointer;margin:4px;}
+.modal button.cancel{background:#cbb295;}
+.footer-note{text-align:center;margin-top:14px;font-size:11px;color:#937c66;}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:#4d3624;color:#fff;padding:10px 20px;border-radius:24px;font-size:14px;opacity:0;transition:.3s;z-index:100;pointer-events:none;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
 </head>
 <body>
-<div class="app">
-<div class="header">
-<div>🪙 <span class="coin" id="coinDisplay">0</span></div>
-<div>🎯 <span id="todayCount">0</span>/<span id="goalDisplay">20</span></div>
+<div class="container">
+
+<div class="top-bar">
+<h1>🐾 英灵伙伴</h1>
+<div class="top-right">
+<span class="daily-badge" onclick="claimDaily()">📅 签到</span>
+<span class="coin-display">🪙 <span id="coinCount">0</span></span>
+</div>
+</div>
+
+<div class="nav-tabs">
+<button class="nav-tab active" data-panel="petPanel">🐶 宠物</button>
+<button class="nav-tab" data-panel="homePanel">🏠 家园</button>
+<button class="nav-tab" data-panel="battlePanel">⚔️ 战斗</button>
+<button class="nav-tab" data-panel="learnPanel">📖 学习</button>
+<button class="nav-tab" data-panel="miniPanel">🎮 小游戏</button>
+<button class="nav-tab" data-panel="friendPanel">👥 好友</button>
+<button class="nav-tab" data-panel="bagPanel">🎒 背包</button>
+</div>
+
+<!-- 宠物面板 -->
+<div id="petPanel" class="panel active-panel">
+<div class="pet-card">
+<div class="pet-header">
+<span class="pet-name" id="petNameDisplay">小火花</span>
+<span class="pet-level">Lv.<span id="petLevel">1</span></span>
+</div>
+<div class="pet-scene" id="petScene">
+<span class="deco" style="top:12px;left:12px;">🌸</span>
+<span class="deco" style="top:14px;right:14px;">🌳</span>
+<span class="deco" style="bottom:8px;left:10px;">🪴</span>
+<span class="deco" style="bottom:6px;right:8px;">💡</span>
+<div class="pet-sprite" id="petSprite" onclick="petTalk()">🐶</div>
+</div>
+<div class="stat-row">
+<span class="stat-item">❤️ <span id="petHp">100</span>/<span id="petMaxHp">100</span></span>
+<span class="stat-item">⚡ <span id="petEnergy">80</span>/100</span>
+<span class="stat-item">😊 <span id="petMood">70</span></span>
+<span class="stat-item">🧼 <span id="petClean">80</span></span>
+</div>
+<div class="exp-bar"><div class="exp-fill" id="expFill"></div></div>
+<div style="display:flex;justify-content:space-between;font-size:12px;color:#6b5540;"><span>经验</span><span id="expText">0/100</span></div>
+<div class="pet-actions">
+<button class="pet-btn" onclick="feedPet()">🍎 喂食</button>
+<button class="pet-btn" onclick="playPet()">🎾 玩耍</button>
+<button class="pet-btn" onclick="sleepPet()">💤 休息</button>
+<button class="pet-btn" onclick="bathePet()">🛁 洗澡</button>
+</div>
+</div>
+<div class="chat-bubble" id="petChat">你好！今天也要一起学英语哦～</div>
+</div>
+
+<!-- 家园面板 -->
+<div id="homePanel" class="panel">
+<div style="background:#fdf3e6;border-radius:24px;padding:14px;">
+<h3 style="color:#4d3624;margin-bottom:8px;">🏠 我的宠物家园 <span id="homeLevel" style="font-size:13px;color:#937c66;">Lv.1</span></h3>
+<div class="room-grid" id="roomGrid"></div>
+<div style="font-size:13px;color:#6b5540;margin:8px 0;">🛒 家具商店</div>
+<div class="shop-items" id="shopItems"></div>
+</div>
+</div>
+
+<!-- 战斗面板 -->
+<div id="battlePanel" class="panel">
+<div style="display:flex;gap:8px;margin-bottom:10px;">
+<button onclick="startTurnBattle()" style="flex:1;background:#e74c3c;color:#fff;border:none;border-radius:20px;padding:10px;font-weight:700;cursor:pointer;">⚔️ 回合制对打</button>
+<button onclick="startComboBattle()" style="flex:1;background:#e67e22;color:#fff;border:none;border-radius:20px;padding:10px;font-weight:700;cursor:pointer;">⏱️ 限时连击</button>
+</div>
+<div class="battle-area" id="battleArea" style="display:none;">
+<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+<span>👹 怪兽 HP</span><span id="battleRound">第 1 关</span>
+</div>
+<div class="hp-bar"><div class="hp-fill" id="monsterHpFill" style="width:100%"></div></div>
+<div class="monster" id="monsterSprite">👹</div>
+<div id="comboLine" style="display:none;">
+<div class="combo-display" id="comboText">连击 x0 · 剩余 30s</div>
+<div class="hp-bar"><div class="hp-fill" id="comboHpFill" style="width:100%"></div></div>
+</div>
+<div class="battle-word" id="battleWord">
+<div class="ew">apple</div>
+<div class="cw">???</div>
+</div>
+<div class="battle-opts" id="battleOpts"></div>
+</div>
+<div id="battleMsg" style="text-align:center;color:#937c66;font-size:13px;margin-top:8px;">选择上方模式开始战斗！答对单词就能攻击怪兽 💥</div>
 </div>
 
 <!-- 学习面板 -->
-<div id="learnPanel">
-<div class="card" style="text-align:center;margin-bottom:8px">
-<div style="font-size:12px;color:#aaa;margin-bottom:4px">🎯 每日目标</div>
-<div><button class="btn-sm" onclick="setGoal(20)">20</button><button class="btn-sm" onclick="setGoal(50)">50</button><button class="btn-sm" onclick="setGoal(100)">100</button></div>
-<input id="goalInput" type="number" placeholder="自定义" style="width:70px;padding:4px;border-radius:6px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.05);color:#fff;text-align:center;margin-top:4px">
-<button class="btn-sm" onclick="const v=parseInt(document.getElementById('goalInput').value);if(v>0)setGoal(v)">确定</button>
+<div id="learnPanel" class="panel">
+<div class="learn-card">
+<div class="ew" id="learnEn">apple</div>
+<div class="cw" id="learnCn">???</div>
+<div class="learn-opts" id="learnOpts"></div>
+<div class="learn-progress">
+<span>✅ 正确: <span id="learnCorrect">0</span></span>
+<span>📚 <span id="learnIdx">1</span>/<span id="learnTotal">0</span></span>
+</div>
+</div>
+<button onclick="nextLearn()" style="width:100%;background:#b99a7e;border:none;border-radius:24px;padding:11px;color:#fff;font-weight:600;font-size:16px;cursor:pointer;">▶ 下一题</button>
 </div>
 
-<div class="pet-area">
-<span class="pet-emoji" id="mainPet">👻</span>
-<div class="pet-name" id="petName">小幽灵</div>
+<!-- 小游戏面板 -->
+<div id="miniPanel" class="panel">
+<div style="display:flex;gap:8px;margin-bottom:10px;">
+<button onclick="startMemory()" style="flex:1;background:#8e44ad;color:#fff;border:none;border-radius:20px;padding:10px;font-weight:700;cursor:pointer;">🎴 翻翻乐</button>
+<button onclick="startMatch()" style="flex:1;background:#2980b9;color:#fff;border:none;border-radius:20px;padding:10px;font-weight:700;cursor:pointer;">💎 消消乐</button>
+</div>
+<div class="mini-header" id="miniHeader" style="display:none;">
+<span id="miniScore">得分: 0</span>
+<span id="miniTimer"></span>
+<button onclick="exitMini()">退出</button>
+</div>
+<div class="game-board" id="miniBoard"></div>
+<div id="miniMsg" style="text-align:center;color:#937c66;font-size:13px;">选择上方游戏开始！</div>
 </div>
 
-<div class="card">
-<div class="word-en" id="wordEn">apple</div>
-<div class="word-ph" id="wordPh">/ˈæp.l/</div>
-<div class="options" id="optionsBox"></div>
+<!-- 好友面板 -->
+<div id="friendPanel" class="panel">
+<div style="background:#fcf2e4;border-radius:24px;padding:14px;">
+<div class="friend-search">
+<input type="text" id="friendInput" placeholder="输入好友ID...">
+<button onclick="addFriend()">➕ 添加</button>
 </div>
-</div>
-
-<!-- 抽卡面板 -->
-<div id="gachaPanel" class="hidden">
-<div class="card gacha-area">
-<div style="font-size:18px;font-weight:bold;color:gold;margin-bottom:6px">🎰 老虎机抽卡</div>
-<div class="slot-reels" id="slotReels">🎃 👻 🕷️</div>
-<button class="btn-gacha" onclick="doGacha()">抽卡 (50🪙)</button>
-<div id="gachaResult" style="margin-top:8px;font-size:14px;min-height:20px"></div>
-<div style="font-size:11px;color:#666;margin-top:4px">保底: <span id="pityDisplay">0</span>/50</div>
-</div>
-</div>
-
-<!-- 图鉴面板 -->
-<div id="dexPanel" class="hidden">
-<div class="card">
-<div style="font-weight:bold;margin-bottom:8px">📖 宠物图鉴 (<span id="unlockCount">0</span>/8)</div>
-<div id="dexGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px"></div>
+<ul class="friend-list" id="friendList"></ul>
+<div class="gift-area">
+<p>🎁 给在线好友送礼物</p>
+<button class="gift-btn" onclick="sendGift()">🎀 随机赠送</button>
+<p id="giftMsg" style="margin-top:6px;font-size:12px;">还没有好友可以赠送~</p>
 </div>
 </div>
 </div>
 
-<div class="nav">
-<button class="nav-item active" onclick="switchTab('learn')"><span class="icon">📚</span>学习</button>
-<button class="nav-item" onclick="switchTab('gacha')"><span class="icon">🎰</span>抽卡</button>
-<button class="nav-item" onclick="switchTab('dex')"><span class="icon">📖</span>图鉴</button>
+<!-- 背包面板 -->
+<div id="bagPanel" class="panel">
+<div style="background:#fcf2e4;border-radius:24px;padding:14px;">
+<h3 style="color:#4d3624;margin-bottom:8px;">🎒 我的背包</h3>
+<div class="bag-grid">
+<div class="bag-item"><span class="item-icon">🧪</span>体力药水<span class="item-count" id="bagPotion">×0</span></div>
+<div class="bag-item"><span class="item-icon">🍬</span>经验糖果<span class="item-count" id="bagCandy">×0</span></div>
+<div class="bag-item"><span class="item-icon">💝</span>心情礼盒<span class="item-count" id="bagGift">×0</span></div>
 </div>
+<p style="font-size:12px;color:#786047;margin-top:8px;">💡 答对单词、闯关胜利、签到可获得道具</p>
+<button onclick="useItem()" style="width:100%;margin-top:10px;background:#b99a7e;border:none;border-radius:24px;padding:10px;color:#fff;font-weight:600;cursor:pointer;">🎯 使用道具（优先药水）</button>
+</div>
+</div>
+
+<div class="footer-note">✨ 千词词库 · 怪兽战斗 · 宠物养成 · 家园建设 · 好友互动 · 每日签到 ✨</div>
+</div>
+
+<!-- 结算弹窗 -->
+<div class="modal-overlay" id="modal">
+<div class="modal">
+<div class="big" id="modalIcon">🎉</div>
+<h3 id="modalTitle">关卡通过！</h3>
+<p id="modalText">获得 20 金币和 1 个体力药水！</p>
+<button onclick="closeModal()">继续</button>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
-// ===== 宠物数据 =====
-const PETS=[
-{id:1,name:'小幽灵',emoji:'👻',rarity:'普通',prob:0.45},
-{id:2,name:'南瓜怪',emoji:'🎃',rarity:'普通',prob:0.27},
-{id:3,name:'蜘蛛精',emoji:'🕷️',rarity:'普通',prob:0.14},
-{id:4,name:'小蝙蝠',emoji:'🦇',rarity:'稀有',prob:0.065},
-{id:5,name:'吸血鬼',emoji:'🧛',rarity:'稀有',prob:0.045},
-{id:6,name:'冰霜狼',emoji:'🐺',rarity:'稀有',prob:0.018},
-{id:7,name:'幻影龙',emoji:'🐉',rarity:'史诗',prob:0.007},
-{id:8,name:'混沌神兽',emoji:'🦄',rarity:'传说',prob:0.003}
-];
-
-// ===== 词库 =====
+/* ================= 千词库 ================= */
 const WORDS=[
-{en:'apple',ph:'/ˈæp.l/',cn:'苹果'},
-{en:'book',ph:'/bʊk/',cn:'书'},
-{en:'cat',ph:'/kæt/',cn:'猫'},
-{en:'dog',ph:'/dɒɡ/',cn:'狗'},
-{en:'egg',ph:'/eɡ/',cn:'鸡蛋'},
-{en:'fish',ph:'/fɪʃ/',cn:'鱼'},
-{en:'ghost',ph:'/ɡəʊst/',cn:'幽灵'},
-{en:'happy',ph:'/ˈhæp.i/',cn:'快乐'},
-{en:'monster',ph:'/ˈmɒn.stər/',cn:'怪兽'},
-{en:'pumpkin',ph:'/ˈpʌmp.kɪn/',cn:'南瓜'},
-{en:'spider',ph:'/ˈspaɪ.dər/',cn:'蜘蛛'},
-{en:'vampire',ph:'/ˈvæm.paɪər/',cn:'吸血鬼'},
-{en:'bat',ph:'/bæt/',cn:'蝙蝠'},
-{en:'mummy',ph:'/ˈmʌm.i/',cn:'木乃伊'},
-{en:'werewolf',ph:'/ˈweə.wʊlf/',cn:'狼人'},
-{en:'witch',ph:'/wɪtʃ/',cn:'女巫'},
-{en:'cauldron',ph:'/ˈkɔːl.drən/',cn:'大锅'},
-{en:'broom',ph:'/bruːm/',cn:'扫帚'},
-{en:'candy',ph:'/ˈkæn.di/',cn:'糖果'},
-{en:'costume',ph:'/ˈkɒs.tjuːm/',cn:'服装'}
+{en:"apple",cn:"苹果"},
+{en:"banana",cn:"香蕉"},
+{en:"cat",cn:"猫"},
+{en:"dog",cn:"狗"},
+{en:"elephant",cn:"大象"},
+{en:"fish",cn:"鱼"},
+{en:"grape",cn:"葡萄"},
+{en:"house",cn:"房子"},
+{en:"juice",cn:"果汁"},
+{en:"kite",cn:"风筝"},
+{en:"lion",cn:"狮子"},
+{en:"moon",cn:"月亮"},
+{en:"notebook",cn:"笔记本"},
+{en:"orange",cn:"橙子"},
+{en:"pencil",cn:"铅笔"},
+{en:"rabbit",cn:"兔子"},
+{en:"sun",cn:"太阳"},
+{en:"tree",cn:"树"},
+{en:"umbrella",cn:"雨伞"},
+{en:"violin",cn:"小提琴"},
+{en:"water",cn:"水"},
+{en:"yellow",cn:"黄色"},
+{en:"zebra",cn:"斑马"},
+{en:"book",cn:"书"},
+{en:"chair",cn:"椅子"},
+{en:"door",cn:"门"},
+{en:"egg",cn:"鸡蛋"},
+{en:"flower",cn:"花"},
+{en:"garden",cn:"花园"},
+{en:"hat",cn:"帽子"},
+{en:"island",cn:"岛屿"},
+{en:"jacket",cn:"夹克"},
+{en:"key",cn:"钥匙"},
+{en:"lamp",cn:"灯"},
+{en:"mountain",cn:"山"},
+{en:"nest",cn:"巢穴"},
+{en:"ocean",cn:"海洋"},
+{en:"panda",cn:"熊猫"},
+{en:"river",cn:"河流"},
+{en:"star",cn:"星星"},
+{en:"table",cn:"桌子"},
+{en:"voice",cn:"声音"},
+{en:"window",cn:"窗户"},
+{en:"box",cn:"盒子"},
+{en:"cloud",cn:"云"},
+{en:"dream",cn:"梦想"},
+{en:"earth",cn:"地球"},
+{en:"forest",cn:"森林"},
+{en:"glass",cn:"玻璃"},
+{en:"heart",cn:"心脏"},
+{en:"idea",cn:"主意"},
+{en:"joke",cn:"笑话"},
+{en:"king",cn:"国王"},
+{en:"lake",cn:"湖"},
+{en:"music",cn:"音乐"},
+{en:"night",cn:"夜晚"},
+{en:"office",cn:"办公室"},
+{en:"park",cn:"公园"},
+{en:"rain",cn:"雨"},
+{en:"school",cn:"学校"},
+{en:"tiger",cn:"老虎"},
+{en:"village",cn:"村庄"},
+{en:"wall",cn:"墙"},
+{en:"year",cn:"年"},
+{en:"zero",cn:"零"},
+{en:"air",cn:"空气"},
+{en:"bridge",cn:"桥"},
+{en:"city",cn:"城市"},
+{en:"day",cn:"天"},
+{en:"eye",cn:"眼睛"},
+{en:"face",cn:"脸"},
+{en:"game",cn:"游戏"},
+{en:"hand",cn:"手"},
+{en:"jam",cn:"果酱"},
+{en:"kitchen",cn:"厨房"},
+{en:"leg",cn:"腿"},
+{en:"milk",cn:"牛奶"},
+{en:"nose",cn:"鼻子"},
+{en:"open",cn:"打开"},
+{en:"paint",cn:"油漆"},
+{en:"ring",cn:"戒指"},
+{en:"sea",cn:"海"},
+{en:"tea",cn:"茶"},
+{en:"use",cn:"使用"},
+{en:"van",cn:"面包车"},
+{en:"warm",cn:"温暖的"},
+{en:"young",cn:"年轻的"},
+{en:"angle",cn:"角度"},
+{en:"ball",cn:"球"},
+{en:"cake",cn:"蛋糕"},
+{en:"duck",cn:"鸭子"},
+{en:"edge",cn:"边缘"},
+{en:"flag",cn:"旗帜"},
+{en:"gold",cn:"金子"},
+{en:"hill",cn:"小山"},
+{en:"iron",cn:"铁"},
+{en:"jump",cn:"跳"},
+{en:"knife",cn:"刀"},
+{en:"leaf",cn:"叶子"},
+{en:"meat",cn:"肉"},
+{en:"name",cn:"名字"},
+{en:"oven",cn:"烤箱"},
+{en:"page",cn:"页"},
+{en:"quiet",cn:"安静的"},
+{en:"road",cn:"路"},
+{en:"sand",cn:"沙子"},
+{en:"tent",cn:"帐篷"},
+{en:"ugly",cn:"丑陋的"},
+{en:"view",cn:"视野"},
+{en:"wave",cn:"波浪"},
+{en:"yard",cn:"院子"},
+{en:"adult",cn:"成年人"},
+{en:"beach",cn:"海滩"},
+{en:"cave",cn:"洞穴"},
+{en:"desk",cn:"书桌"},
+{en:"exit",cn:"出口"},
+{en:"farm",cn:"农场"},
+{en:"gate",cn:"大门"},
+{en:"hole",cn:"洞"},
+{en:"image",cn:"图像"},
+{en:"jeans",cn:"牛仔裤"},
+{en:"knee",cn:"膝盖"},
+{en:"lock",cn:"锁"},
+{en:"mask",cn:"面具"},
+{en:"neck",cn:"脖子"},
+{en:"owner",cn:"主人"},
+{en:"pipe",cn:"管子"},
+{en:"quiz",cn:"测验"},
+{en:"roof",cn:"屋顶"},
+{en:"ship",cn:"船"},
+{en:"tail",cn:"尾巴"},
+{en:"user",cn:"用户"},
+{en:"vast",cn:"广阔的"},
+{en:"west",cn:"西"},
+{en:"youth",cn:"青年"},
+{en:"actor",cn:"演员"},
+{en:"bread",cn:"面包"},
+{en:"chest",cn:"胸部"},
+{en:"dance",cn:"跳舞"},
+{en:"elbow",cn:"肘部"},
+{en:"fruit",cn:"水果"},
+{en:"ghost",cn:"鬼"},
+{en:"horse",cn:"马"},
+{en:"judge",cn:"法官"},
+{en:"lunch",cn:"午餐"},
+{en:"nurse",cn:"护士"},
+{en:"party",cn:"派对"},
+{en:"sheep",cn:"绵羊"},
+{en:"truck",cn:"卡车"},
+{en:"uncle",cn:"叔叔"},
+{en:"virus",cn:"病毒"},
+{en:"woman",cn:"女人"},
+{en:"yacht",cn:"游艇"},
+{en:"angel",cn:"天使"},
+{en:"brain",cn:"大脑"},
+{en:"candy",cn:"糖果"},
+{en:"demon",cn:"恶魔"},
+{en:"eagle",cn:"鹰"},
+{en:"flame",cn:"火焰"},
+{en:"giant",cn:"巨人"},
+{en:"honey",cn:"蜂蜜"},
+{en:"ivory",cn:"象牙"},
+{en:"jewel",cn:"珠宝"},
+{en:"koala",cn:"考拉"},
+{en:"lemon",cn:"柠檬"},
+{en:"magic",cn:"魔法"},
+{en:"ninja",cn:"忍者"},
+{en:"olive",cn:"橄榄"},
+{en:"pearl",cn:"珍珠"},
+{en:"robot",cn:"机器人"},
+{en:"snake",cn:"蛇"},
+{en:"unity",cn:"团结"},
+{en:"viper",cn:"毒蛇"},
+{en:"whale",cn:"鲸鱼"},
+{en:"yogurt",cn:"酸奶"},
+{en:"zombie",cn:"僵尸"},
+{en:"arrow",cn:"箭"},
+{en:"basket",cn:"篮子"},
+{en:"castle",cn:"城堡"},
+{en:"donkey",cn:"驴"},
+{en:"engine",cn:"引擎"},
+{en:"finger",cn:"手指"},
+{en:"guitar",cn:"吉他"},
+{en:"hammer",cn:"锤子"},
+{en:"jungle",cn:"丛林"},
+{en:"kettle",cn:"水壶"},
+{en:"ladder",cn:"梯子"},
+{en:"monkey",cn:"猴子"},
+{en:"needle",cn:"针"},
+{en:"puzzle",cn:"拼图"},
+{en:"rocket",cn:"火箭"},
+{en:"saddle",cn:"马鞍"},
+{en:"turtle",cn:"乌龟"},
+{en:"vacuum",cn:"真空"},
+{en:"walnut",cn:"核桃"},
+{en:"anchor",cn:"锚"},
+{en:"barrel",cn:"桶"},
+{en:"candle",cn:"蜡烛"},
+{en:"dagger",cn:"匕首"},
+{en:"falcon",cn:"猎鹰"},
+{en:"goblin",cn:"妖精"},
+{en:"helmet",cn:"头盔"},
+{en:"iguana",cn:"鬣蜥"},
+{en:"jaguar",cn:"美洲虎"},
+{en:"knight",cn:"骑士"},
+{en:"lantern",cn:"灯笼"},
+{en:"mirror",cn:"镜子"},
+{en:"napkin",cn:"餐巾"},
+{en:"octopus",cn:"章鱼"},
+{en:"pillow",cn:"枕头"},
+{en:"quartz",cn:"石英"},
+{en:"radish",cn:"萝卜"},
+{en:"salmon",cn:"三文鱼"},
+{en:"tomato",cn:"番茄"},
+{en:"unicorn",cn:"独角兽"},
+{en:"velvet",cn:"天鹅绒"},
+{en:"waffle",cn:"华夫饼"},
+{en:"cactus",cn:"仙人掌"},
+{en:"dragon",cn:"龙"},
+{en:"fossil",cn:"化石"},
+{en:"giraffe",cn:"长颈鹿"},
+{en:"hyena",cn:"鬣狗"},
+{en:"ibex",cn:"野山羊"},
+{en:"jackal",cn:"豺"},
+{en:"lemur",cn:"狐猴"},
+{en:"mantis",cn:"螳螂"},
+{en:"newt",cn:"蝾螈"},
+{en:"otter",cn:"水獭"},
+{en:"puma",cn:"美洲狮"},
+{en:"rhino",cn:"犀牛"},
+{en:"sloth",cn:"树懒"},
+{en:"tapir",cn:"貘"},
+{en:"urchin",cn:"海胆"},
+{en:"vixen",cn:"雌狐"},
+{en:"weasel",cn:"黄鼠狼"},
+{en:"alpaca",cn:"羊驼"},
+{en:"badger",cn:"獾"},
+{en:"coyote",cn:"郊狼"},
+{en:"dolphin",cn:"海豚"},
+{en:"ferret",cn:"雪貂"},
+{en:"gerbil",cn:"沙鼠"},
+{en:"hedgehog",cn:"刺猬"},
+{en:"impala",cn:"黑斑羚"},
+{en:"jellyfish",cn:"水母"},
+{en:"kiwi",cn:"猕猴桃"},
+{en:"llama",cn:"美洲驼"},
+{en:"manatee",cn:"海牛"},
+{en:"narwhal",cn:"独角鲸"},
+{en:"ocelot",cn:"虎猫"},
+{en:"penguin",cn:"企鹅"},
+{en:"quokka",cn:"短尾矮袋鼠"},
+{en:"raccoon",cn:"浣熊"},
+{en:"seahorse",cn:"海马"},
+{en:"toucan",cn:"巨嘴鸟"},
+{en:"vulture",cn:"秃鹫"},
+{en:"walrus",cn:"海象"},
+{en:"almond",cn:"杏仁"},
+{en:"broccoli",cn:"西兰花"},
+{en:"celery",cn:"芹菜"},
+{en:"daikon",cn:"白萝卜"},
+{en:"endive",cn:"菊苣"},
+{en:"fennel",cn:"茴香"},
+{en:"garlic",cn:"大蒜"},
+{en:"horseradish",cn:"辣根"},
+{en:"jalapeno",cn:"墨西哥辣椒"},
+{en:"kale",cn:"羽衣甘蓝"},
+{en:"lettuce",cn:"生菜"},
+{en:"mushroom",cn:"蘑菇"},
+{en:"nori",cn:"海苔"},
+{en:"okra",cn:"秋葵"},
+{en:"parsnip",cn:"欧洲萝卜"},
+{en:"quinoa",cn:"藜麦"},
+{en:"spinach",cn:"菠菜"},
+{en:"turnip",cn:"芜菁"},
+{en:"wasabi",cn:"芥末"},
+{en:"avocado",cn:"鳄梨"},
+{en:"blueberry",cn:"蓝莓"},
+{en:"cranberry",cn:"蔓越莓"},
+{en:"durian",cn:"榴莲"},
+{en:"elderberry",cn:"接骨木莓"},
+{en:"fig",cn:"无花果"},
+{en:"guava",cn:"番石榴"},
+{en:"honeydew",cn:"蜜瓜"},
+{en:"jackfruit",cn:"菠萝蜜"},
+{en:"kiwifruit",cn:"奇异果"},
+{en:"lime",cn:"青柠"},
+{en:"mango",cn:"芒果"},
+{en:"nectarine",cn:"油桃"},
+{en:"papaya",cn:"木瓜"},
+{en:"raspberry",cn:"覆盆子"},
+{en:"strawberry",cn:"草莓"},
+{en:"tangerine",cn:"柑橘"},
+{en:"watermelon",cn:"西瓜"},
+{en:"acorn",cn:"橡子"},
+{en:"butterfly",cn:"蝴蝶"},
+{en:"caterpillar",cn:"毛毛虫"},
+{en:"dragonfly",cn:"蜻蜓"},
+{en:"earthworm",cn:"蚯蚓"},
+{en:"firefly",cn:"萤火虫"},
+{en:"grasshopper",cn:"蚱蜢"},
+{en:"hummingbird",cn:"蜂鸟"},
+{en:"ladybug",cn:"瓢虫"},
+{en:"mosquito",cn:"蚊子"},
+{en:"scorpion",cn:"蝎子"},
+{en:"spider",cn:"蜘蛛"},
+{en:"termite",cn:"白蚁"},
+{en:"woodpecker",cn:"啄木鸟"},
+{en:"asteroid",cn:"小行星"},
+{en:"comet",cn:"彗星"},
+{en:"galaxy",cn:"星系"},
+{en:"meteor",cn:"流星"},
+{en:"nebula",cn:"星云"},
+{en:"planet",cn:"行星"},
+{en:"satellite",cn:"卫星"},
+{en:"telescope",cn:"望远镜"},
+{en:"mercury",cn:"水星"},
+{en:"venus",cn:"金星"},
+{en:"mars",cn:"火星"},
+{en:"jupiter",cn:"木星"},
+{en:"saturn",cn:"土星"},
+{en:"uranus",cn:"天王星"},
+{en:"neptune",cn:"海王星"},
+{en:"pluto",cn:"冥王星"},
+{en:"algebra",cn:"代数"},
+{en:"geometry",cn:"几何"},
+{en:"biology",cn:"生物学"},
+{en:"chemistry",cn:"化学"},
+{en:"physics",cn:"物理学"},
+{en:"astronomy",cn:"天文学"},
+{en:"geology",cn:"地质学"},
+{en:"psychology",cn:"心理学"},
+{en:"sociology",cn:"社会学"},
+{en:"philosophy",cn:"哲学"},
+{en:"history",cn:"历史"},
+{en:"literature",cn:"文学"},
+{en:"grammar",cn:"语法"},
+{en:"vocabulary",cn:"词汇"},
+{en:"pronunciation",cn:"发音"},
+{en:"adjective",cn:"形容词"},
+{en:"adverb",cn:"副词"},
+{en:"conjunction",cn:"连词"},
+{en:"noun",cn:"名词"},
+{en:"preposition",cn:"介词"},
+{en:"pronoun",cn:"代词"},
+{en:"verb",cn:"动词"},
+{en:"symphony",cn:"交响乐"},
+{en:"melody",cn:"旋律"},
+{en:"harmony",cn:"和声"},
+{en:"rhythm",cn:"节奏"},
+{en:"tempo",cn:"速度"},
+{en:"orchestra",cn:"管弦乐队"},
+{en:"piano",cn:"钢琴"},
+{en:"cello",cn:"大提琴"},
+{en:"flute",cn:"长笛"},
+{en:"clarinet",cn:"单簧管"},
+{en:"trumpet",cn:"小号"},
+{en:"harp",cn:"竖琴"},
+{en:"drum",cn:"鼓"},
+{en:"canvas",cn:"画布"},
+{en:"palette",cn:"调色板"},
+{en:"sculpture",cn:"雕塑"},
+{en:"pottery",cn:"陶器"},
+{en:"calligraphy",cn:"书法"},
+{en:"mosaic",cn:"马赛克"},
+{en:"democracy",cn:"民主"},
+{en:"republic",cn:"共和国"},
+{en:"monarchy",cn:"君主制"},
+{en:"constitution",cn:"宪法"},
+{en:"parliament",cn:"议会"},
+{en:"senate",cn:"参议院"},
+{en:"congress",cn:"国会"},
+{en:"ambassador",cn:"大使"},
+{en:"diplomat",cn:"外交官"},
+{en:"treaty",cn:"条约"},
+{en:"alliance",cn:"联盟"},
+{en:"tariff",cn:"关税"},
+{en:"budget",cn:"预算"},
+{en:"economy",cn:"经济"},
+{en:"inflation",cn:"通货膨胀"},
+{en:"recession",cn:"衰退"},
+{en:"dividend",cn:"股息"},
+{en:"mortgage",cn:"抵押贷款"},
+{en:"asset",cn:"资产"},
+{en:"algorithm",cn:"算法"},
+{en:"database",cn:"数据库"},
+{en:"software",cn:"软件"},
+{en:"network",cn:"网络"},
+{en:"server",cn:"服务器"},
+{en:"encryption",cn:"加密"},
+{en:"protocol",cn:"协议"},
+{en:"volcano",cn:"火山"},
+{en:"earthquake",cn:"地震"},
+{en:"tsunami",cn:"海啸"},
+{en:"hurricane",cn:"飓风"},
+{en:"typhoon",cn:"台风"},
+{en:"tornado",cn:"龙卷风"},
+{en:"drought",cn:"干旱"},
+{en:"flood",cn:"洪水"},
+{en:"oxygen",cn:"氧气"},
+{en:"hydrogen",cn:"氢气"},
+{en:"diamond",cn:"钻石"},
+{en:"emerald",cn:"翡翠"},
+{en:"sapphire",cn:"蓝宝石"},
+{en:"ruby",cn:"红宝石"},
+{en:"amber",cn:"琥珀"},
+{en:"puzzle",cn:"谜题"},
+{en:"riddle",cn:"谜语"},
+{en:"myth",cn:"神话"},
+{en:"legend",cn:"传说"},
+{en:"fairy",cn:"仙女"},
+{en:"wizard",cn:"巫师"},
+{en:"castle",cn:"城堡"},
+{en:"dungeon",cn:"地牢"},
+{en:"shield",cn:"盾牌"},
+{en:"sword",cn:"剑"},
+{en:"armor",cn:"盔甲"},
+{en:"crown",cn:"王冠"},
+{en:"throne",cn:"王座"},
+{en:"kingdom",cn:"王国"},
+{en:"empire",cn:"帝国"},
+{en:"battle",cn:"战斗"},
+{en:"victory",cn:"胜利"},
+{en:"defeat",cn:"失败"},
+{en:"hero",cn:"英雄"},
+{en:"warrior",cn:"战士"},
+{en:"knight",cn:"骑士"},
+{en:"dragon",cn:"龙"},
+{en:"phoenix",cn:"凤凰"},
+{en:"griffin",cn:"狮鹫"},
+{en:"mermaid",cn:"美人鱼"},
+{en:"unicorn",cn:"独角兽"},
+{en:"breeze",cn:"微风"},
+{en:"thunder",cn:"雷"},
+{en:"lightning",cn:"闪电"},
+{en:"rainbow",cn:"彩虹"},
+{en:"shadow",cn:"影子"},
+{en:"mirror",cn:"镜子"},
+{en:"crystal",cn:"水晶"},
+{en:"feather",cn:"羽毛"},
+{en:"petal",cn:"花瓣"},
+{en:"root",cn:"根"},
+{en:"branch",cn:"树枝"},
+{en:"trunk",cn:"树干"},
+{en:"leaf",cn:"叶子"},
+{en:"blossom",cn:"花"},
+{en:"harvest",cn:"丰收"},
+{en:"season",cn:"季节"},
+{en:"spring",cn:"春天"},
+{en:"summer",cn:"夏天"},
+{en:"autumn",cn:"秋天"},
+{en:"winter",cn:"冬天"},
+{en:"dawn",cn:"黎明"},
+{en:"dusk",cn:"黄昏"},
+{en:"midnight",cn:"午夜"},
+{en:"journey",cn:"旅程"},
+{en:"adventure",cn:"冒险"},
+{en:"treasure",cn:"宝藏"},
+{en:"fortune",cn:"命运"},
+{en:"destiny",cn:"天命"},
+{en:"courage",cn:"勇气"},
+{en:"wisdom",cn:"智慧"},
+{en:"kindness",cn:"善良"},
+{en:"patience",cn:"耐心"},
+{en:"honesty",cn:"诚实"},
+{en:"loyalty",cn:"忠诚"},
+{en:"freedom",cn:"自由"},
+{en:"peace",cn:"和平"},
+{en:"hope",cn:"希望"},
+{en:"dream",cn:"梦想"},
+{en:"memory",cn:"记忆"},
+{en:"moment",cn:"瞬间"},
+{en:"whisper",cn:"低语"},
+{en:"shout",cn:"喊叫"},
+{en:"laugh",cn:"笑"},
+{en:"smile",cn:"微笑"},
+{en:"tear",cn:"眼泪"},
+{en:"hug",cn:"拥抱"},
+{en:"kiss",cn:"吻"},
+{en:"gift",cn:"礼物"},
+{en:"surprise",cn:"惊喜"},
+{en:"secret",cn:"秘密"},
+{en:"puzzle",cn:"拼图"},
+{en:"board",cn:"棋盘"},
+{en:"chess",cn:"国际象棋"},
+{en:"dice",cn:"骰子"},
+{en:"card",cn:"卡片"},
+{en:"token",cn:"令牌"},
+{en:"score",cn:"分数"},
+{en:"level",cn:"等级"},
+{en:"bonus",cn:"奖励"},
+{en:"prize",cn:"奖品"},
+{en:"champion",cn:"冠军"},
+{en:"medal",cn:"奖牌"},
+{en:"trophy",cn:"奖杯"},
+{en:"glory",cn:"荣耀"},
+{en:"honor",cn:"荣誉"},
+{en:"spirit",cn:"精神"},
+{en:"soul",cn:"灵魂"},
+{en:"heart",cn:"心"},
+{en:"mind",cn:"心灵"},
+{en:"energy",cn:"能量"},
+{en:"power",cn:"力量"},
+{en:"strength",cn:"力量"},
+{en:"speed",cn:"速度"},
+{en:"skill",cn:"技能"},
+{en:"magic",cn:"魔法"},
+{en:"spell",cn:"咒语"},
+{en:"potion",cn:"药水"},
+{en:"scroll",cn:"卷轴"},
+{en:"wand",cn:"魔杖"},
+{en:"ring",cn:"戒指"},
+{en:"amulet",cn:"护身符"},
+{en:"charm",cn:"护符"},
+{en:"relic",cn:"遗物"},
+{en:"artifact",cn:"神器"},
+{en:"stone",cn:"石头"},
+{en:"crystal",cn:"水晶"},
+{en:"beacon",cn:"灯塔"},
+{en:"lantern",cn:"灯笼"},
+{en:"torch",cn:"火炬"},
+{en:"flame",cn:"火焰"},
+{en:"ember",cn:"余烬"},
+{en:"spark",cn:"火花"},
+{en:"blaze",cn:"烈火"},
+{en:"storm",cn:"风暴"},
+{en:"wave",cn:"波浪"},
+{en:"tide",cn:"潮汐"},
+{en:"current",cn:"水流"},
+{en:"stream",cn:"溪流"},
+{en:"river",cn:"河流"},
+{en:"lake",cn:"湖"},
+{en:"pond",cn:"池塘"},
+{en:"waterfall",cn:"瀑布"},
+{en:"glacier",cn:"冰川"},
+{en:"desert",cn:"沙漠"},
+{en:"jungle",cn:"丛林"},
+{en:"swamp",cn:"沼泽"},
+{en:"cave",cn:"洞穴"},
+{en:"cavern",cn:"大洞穴"},
+{en:"cliff",cn:"悬崖"},
+{en:"peak",cn:"山峰"},
+{en:"summit",cn:"顶峰"},
+{en:"valley",cn:"山谷"},
+{en:"meadow",cn:"草地"},
+{en:"prairie",cn:"草原"},
+{en:"forest",cn:"森林"},
+{en:"woodland",cn:"林地"},
+{en:"grove",cn:"小树林"},
+{en:"orchard",cn:"果园"},
+{en:"vineyard",cn:"葡萄园"},
+{en:"garden",cn:"花园"},
+{en:"greenhouse",cn:"温室"},
+{en:"barn",cn:"谷仓"},
+{en:"stable",cn:"马厩"},
+{en:"kennel",cn:"狗窝"},
+{en:"aquarium",cn:"水族馆"},
+{en:"zoo",cn:"动物园"},
+{en:"circus",cn:"马戏团"},
+{en:"museum",cn:"博物馆"},
+{en:"library",cn:"图书馆"},
+{en:"theater",cn:"剧院"},
+{en:"stadium",cn:"体育场"},
+{en:"arena",cn:"竞技场"},
+{en:"temple",cn:"寺庙"},
+{en:"church",cn:"教堂"},
+{en:"mosque",cn:"清真寺"},
+{en:"shrine",cn:"神社"},
+{en:"castle",cn:"城堡"},
+{en:"palace",cn:"宫殿"},
+{en:"mansion",cn:" mansion"},
+{en:"cottage",cn:"小屋"},
+{en:"cabin",cn:"小木屋"},
+{en:"tent",cn:"帐篷"},
+{en:"igloo",cn:"冰屋"},
+{en:"pyramid",cn:"金字塔"},
+{en:"tower",cn:"塔"},
+{en:"bridge",cn:"桥"},
+{en:"tunnel",cn:"隧道"},
+{en:"road",cn:"路"},
+{en:"path",cn:"小径"},
+{en:"trail",cn:"小道"},
+{en:"street",cn:"街道"},
+{en:"avenue",cn:"大道"},
+{en:"boulevard",cn:"林荫大道"},
+{en:"square",cn:"广场"},
+{en:"plaza",cn:"广场"},
+{en:"market",cn:"市场"},
+{en:"bazaar",cn:"集市"},
+{en:"shop",cn:"商店"},
+{en:"store",cn:"商店"},
+{en:"mall",cn:"商场"},
+{en:"bank",cn:"银行"},
+{en:"hotel",cn:"酒店"},
+{en:"restaurant",cn:"餐厅"},
+{en:"cafe",cn:"咖啡馆"},
+{en:"bakery",cn:"面包店"},
+{en:"butcher",cn:"肉铺"},
+{en:"pharmacy",cn:"药店"},
+{en:"hospital",cn:"医院"},
+{en:"clinic",cn:"诊所"},
+{en:"school",cn:"学校"},
+{en:"college",cn:"学院"},
+{en:"university",cn:"大学"},
+{en:"factory",cn:"工厂"},
+{en:"warehouse",cn:"仓库"},
+{en:"harbor",cn:"港口"},
+{en:"dock",cn:"码头"},
+{en:"airport",cn:"机场"},
+{en:"station",cn:"车站"},
+{en:"subway",cn:"地铁"},
+{en:"bus",cn:"公交车"},
+{en:"taxi",cn:"出租车"},
+{en:"bicycle",cn:"自行车"},
+{en:"motorcycle",cn:"摩托车"},
+{en:"scooter",cn:"踏板车"},
+{en:"train",cn:"火车"},
+{en:"subway",cn:"地铁"},
+{en:"helicopter",cn:"直升机"},
+{en:"airplane",cn:"飞机"},
+{en:"rocket",cn:"火箭"},
+{en:"satellite",cn:"卫星"},
+{en:"telescope",cn:"望远镜"},
+{en:"microscope",cn:"显微镜"},
+{en:"compass",cn:"指南针"},
+{en:"map",cn:"地图"},
+{en:"globe",cn:"地球仪"},
+{en:"atlas",cn:"地图册"},
+{en:"guide",cn:"指南"},
+{en:"journey",cn:"旅程"},
+{en:"voyage",cn:"航行"},
+{en:"expedition",cn:"远征"},
+{en:"mission",cn:"任务"},
+{en:"quest",cn:"探索"},
+{en:"challenge",cn:"挑战"},
+{en:"goal",cn:"目标"},
+{en:"target",cn:"目标"},
+{en:"purpose",cn:"目的"},
+{en:"reason",cn:"原因"},
+{en:"cause",cn:"原因"},
+{en:"effect",cn:"效果"},
+{en:"result",cn:"结果"},
+{en:"reward",cn:"奖励"},
+{en:"prize",cn:"奖品"},
+{en:"gift",cn:"礼物"},
+{en:"present",cn:"礼物"},
+{en:"surprise",cn:"惊喜"},
+{en:"delight",cn:"喜悦"},
+{en:"joy",cn:"快乐"},
+{en:"happiness",cn:"幸福"},
+{en:"bliss",cn:"极乐"},
+{en:"ecstasy",cn:"狂喜"},
+{en:"calm",cn:"平静"},
+{en:"serene",cn:"宁静"},
+{en:"tranquil",cn:"安静"},
+{en:"quiet",cn:"安静"},
+{en:"silent",cn:"寂静"},
+{en:"still",cn:"静止"},
+{en:"peaceful",cn:"和平"},
+{en:"harmony",cn:"和谐"},
+{en:"balance",cn:"平衡"},
+{en:"order",cn:"秩序"},
+{en:"chaos",cn:"混乱"},
+{en:"mess",cn:"杂乱"},
+{en:"clutter",cn:"凌乱"},
+{en:"disorder",cn:"无序"},
+{en:"confusion",cn:"困惑"},
+{en:"puzzle",cn:"困惑"},
+{en:"mystery",cn:"谜"},
+{en:"enigma",cn:"谜"},
+{en:"secret",cn:"秘密"},
+{en:"riddle",cn:"谜语"},
+{en:"clue",cn:"线索"},
+{en:"hint",cn:"提示"},
+{en:"evidence",cn:"证据"},
+{en:"proof",cn:"证明"},
+{en:"fact",cn:"事实"},
+{en:"truth",cn:"真相"},
+{en:"lie",cn:"谎言"},
+{en:"fiction",cn:"虚构"},
+{en:"story",cn:"故事"},
+{en:"tale",cn:"传说"},
+{en:"legend",cn:"传说"},
+{en:"myth",cn:"神话"},
+{en:"fable",cn:"寓言"},
+{en:"parable",cn:"寓言"},
+{en:"poem",cn:"诗"},
+{en:"song",cn:"歌"},
+{en:"melody",cn:"旋律"},
+{en:"rhythm",cn:"节奏"},
+{en:"beat",cn:"节拍"},
+{en:"tune",cn:"曲调"},
+{en:"note",cn:"音符"},
+{en:"chord",cn:"和弦"},
+{en:"scale",cn:"音阶"},
+{en:"tempo",cn:"速度"},
+{en:"pitch",cn:"音高"},
+{en:"volume",cn:"音量"},
+{en:"echo",cn:"回声"},
+{en:"whisper",cn:"低语"},
+{en:"silence",cn:"沉默"},
+{en:"sound",cn:"声音"},
+{en:"noise",cn:"噪音"},
+{en:"music",cn:"音乐"},
+{en:"symphony",cn:"交响乐"},
+{en:"opera",cn:"歌剧"},
+{en:"ballet",cn:"芭蕾"},
+{en:"dance",cn:"舞蹈"},
+{en:"waltz",cn:"华尔兹"},
+{en:"tango",cn:"探戈"},
+{en:"jazz",cn:"爵士"},
+{en:"rock",cn:"摇滚"},
+{en:"pop",cn:"流行"},
+{en:"folk",cn:"民谣"},
+{en:"blues",cn:"蓝调"},
+{en:"rap",cn:"说唱"},
+{en:"hiphop",cn:"嘻哈"},
+{en:"country",cn:"乡村"},
+{en:"classical",cn:"古典"},
+{en:"instrument",cn:"乐器"},
+{en:"guitar",cn:"吉他"},
+{en:"piano",cn:"钢琴"},
+{en:"violin",cn:"小提琴"},
+{en:"drum",cn:"鼓"},
+{en:"trumpet",cn:"小号"},
+{en:"flute",cn:"长笛"},
+{en:"harp",cn:"竖琴"},
+{en:"accordion",cn:"手风琴"},
+{en:"organ",cn:"风琴"},
+{en:"microphone",cn:"麦克风"},
+{en:"speaker",cn:"扬声器"},
+{en:"headphone",cn:"耳机"},
+{en:"headset",cn:"耳机"},
+{en:"earphone",cn:"耳塞"},
+{en:"camera",cn:"相机"},
+{en:"projector",cn:"投影仪"},
+{en:"keyboard",cn:"键盘"},
+{en:"monitor",cn:"显示器"},
+{en:"printer",cn:"打印机"},
+{en:"scanner",cn:"扫描仪"},
+{en:"charger",cn:"充电器"},
+{en:"battery",cn:"电池"},
+{en:"cable",cn:"线缆"},
+{en:"router",cn:"路由器"},
+{en:"mouse",cn:"鼠标"},
+{en:"tablet",cn:"平板电脑"},
+{en:"smartphone",cn:"智能手机"},
+{en:"laptop",cn:"笔记本电脑"},
+{en:"desktop",cn:"台式电脑"},
+{en:"screen",cn:"屏幕"},
+{en:"novel",cn:"小说"},
+{en:"essay",cn:"散文"},
+{en:"biography",cn:"传记"},
+{en:"magazine",cn:"杂志"},
+{en:"newspaper",cn:"报纸"},
+{en:"comic",cn:"漫画"},
+{en:"diary",cn:"日记"},
+{en:"encyclopedia",cn:"百科全书"},
+{en:"dictionary",cn:"字典"},
+{en:"romance",cn:"浪漫"},
+{en:"horror",cn:"恐怖"},
+{en:"comedy",cn:"喜剧"},
+{en:"drama",cn:"戏剧"},
+{en:"thriller",cn:"惊悚"},
+{en:"fantasy",cn:"奇幻"},
+{en:"science fiction",cn:"科幻"},
+{en:"documentary",cn:"纪录片"},
+{en:"director",cn:"导演"},
+{en:"producer",cn:"制片人"},
+{en:"screenwriter",cn:"编剧"},
+{en:"cinematographer",cn:"摄影指导"},
+{en:"editor",cn:"剪辑师"},
+{en:"artist",cn:"艺术家"},
+{en:"musician",cn:"音乐家"},
+{en:"singer",cn:"歌手"},
+{en:"dancer",cn:"舞者"},
+{en:"painter",cn:"画家"},
+{en:"sculptor",cn:"雕塑家"},
+{en:"photographer",cn:"摄影师"},
+{en:"writer",cn:"作家"},
+{en:"poet",cn:"诗人"},
+{en:"composer",cn:"作曲家"},
+{en:"conductor",cn:"指挥"},
+{en:"choreographer",cn:"编舞"},
+{en:"designer",cn:"设计师"},
+{en:"architect",cn:"建筑师"},
+{en:"doctor",cn:"医生"},
+{en:"surgeon",cn:"外科医生"},
+{en:"dentist",cn:"牙医"},
+{en:"pharmacist",cn:"药剂师"},
+{en:"therapist",cn:"治疗师"},
+{en:"psychiatrist",cn:"精神科医生"},
+{en:"pediatrician",cn:"儿科医生"},
+{en:"veterinarian",cn:"兽医"},
+{en:"paramedic",cn:"护理人员"},
+{en:"teacher",cn:"老师"},
+{en:"professor",cn:"教授"},
+{en:"student",cn:"学生"},
+{en:"principal",cn:"校长"},
+{en:"dean",cn:"院长"},
+{en:"tutor",cn:"家教"},
+{en:"librarian",cn:"图书管理员"},
+{en:"researcher",cn:"研究员"},
+{en:"scientist",cn:"科学家"},
+{en:"engineer",cn:"工程师"},
+{en:"lawyer",cn:"律师"},
+{en:"detective",cn:"侦探"},
+{en:"police",cn:"警察"},
+{en:"firefighter",cn:"消防员"},
+{en:"soldier",cn:"士兵"},
+{en:"pilot",cn:"飞行员"},
+{en:"captain",cn:"船长"},
+{en:"sailor",cn:"水手"},
+{en:"astronaut",cn:"宇航员"},
+{en:"chef",cn:"厨师"},
+{en:"waiter",cn:"服务员"},
+{en:"baker",cn:"面包师"},
+{en:"farmer",cn:"农民"},
+{en:"fisherman",cn:"渔民"},
+{en:"miner",cn:"矿工"},
+{en:"mechanic",cn:"机修工"},
+{en:"plumber",cn:"水管工"},
+{en:"carpenter",cn:"木匠"},
+{en:"electrician",cn:"电工"},
+{en:"president",cn:"总统"},
+{en:"minister",cn:"部长"},
+{en:"mayor",cn:"市长"},
+{en:"governor",cn:"州长"},
+{en:"senator",cn:"参议员"},
+{en:"clerk",cn:"职员"},
+{en:"secretary",cn:"秘书"},
+{en:"assistant",cn:"助手"},
+{en:"rice",cn:"米饭"},
+{en:"noodle",cn:"面条"},
+{en:"soup",cn:"汤"},
+{en:"salad",cn:"沙拉"},
+{en:"sandwich",cn:"三明治"},
+{en:"burger",cn:"汉堡"},
+{en:"pizza",cn:"披萨"},
+{en:"pasta",cn:"意大利面"},
+{en:"curry",cn:"咖喱"},
+{en:"chicken",cn:"鸡肉"},
+{en:"beef",cn:"牛肉"},
+{en:"pork",cn:"猪肉"},
+{en:"mutton",cn:"羊肉"},
+{en:"bacon",cn:"培根"},
+{en:"sausage",cn:"香肠"},
+{en:"steak",cn:"牛排"},
+{en:"tofu",cn:"豆腐"},
+{en:"cheese",cn:"奶酪"},
+{en:"butter",cn:"黄油"},
+{en:"sugar",cn:"糖"},
+{en:"salt",cn:"盐"},
+{en:"pepper",cn:"胡椒"},
+{en:"syrup",cn:"糖浆"},
+{en:"vinegar",cn:"醋"},
+{en:"soy sauce",cn:"酱油"},
+{en:"mustard",cn:"芥末"},
+{en:"ketchup",cn:"番茄酱"},
+{en:"mayonnaise",cn:"蛋黄酱"},
+{en:"coffee",cn:"咖啡"},
+{en:"soda",cn:"汽水"},
+{en:"wine",cn:"葡萄酒"},
+{en:"beer",cn:"啤酒"},
+{en:"whiskey",cn:"威士忌"},
+{en:"cocoa",cn:"可可"},
+{en:"plate",cn:"盘子"},
+{en:"bowl",cn:"碗"},
+{en:"cup",cn:"杯子"},
+{en:"fork",cn:"叉子"},
+{en:"spoon",cn:"勺子"},
+{en:"chopsticks",cn:"筷子"},
+{en:"tray",cn:"托盘"},
+{en:"pitcher",cn:"水壶"},
+{en:"shirt",cn:"衬衫"},
+{en:"pants",cn:"裤子"},
+{en:"dress",cn:"连衣裙"},
+{en:"skirt",cn:"短裙"},
+{en:"coat",cn:"外套"},
+{en:"sweater",cn:"毛衣"},
+{en:"scarf",cn:"围巾"},
+{en:"glove",cn:"手套"},
+{en:"sock",cn:"袜子"},
+{en:"shoe",cn:"鞋"},
+{en:"boot",cn:"靴子"},
+{en:"sandal",cn:"凉鞋"},
+{en:"cap",cn:"鸭舌帽"},
+{en:"belt",cn:"腰带"},
+{en:"tie",cn:"领带"},
+{en:"watch",cn:"看"},
+{en:"necklace",cn:"项链"},
+{en:"red",cn:"红色"},
+{en:"blue",cn:"蓝色"},
+{en:"green",cn:"绿色"},
+{en:"purple",cn:"紫色"},
+{en:"pink",cn:"粉色"},
+{en:"brown",cn:"棕色"},
+{en:"black",cn:"黑色"},
+{en:"white",cn:"白色"},
+{en:"happy",cn:"快乐"},
+{en:"sad",cn:"悲伤"},
+{en:"angry",cn:"生气"},
+{en:"scared",cn:"害怕"},
+{en:"excited",cn:"兴奋"},
+{en:"bored",cn:"无聊"},
+{en:"tired",cn:"疲倦"},
+{en:"proud",cn:"骄傲"},
+{en:"shy",cn:"害羞"},
+{en:"brave",cn:"勇敢"},
+{en:"fast",cn:"快"},
+{en:"slow",cn:"慢"},
+{en:"big",cn:"大"},
+{en:"small",cn:"小"},
+{en:"tall",cn:"高"},
+{en:"short",cn:"矮"},
+{en:"heavy",cn:"重"},
+{en:"light",cn:"轻"},
+{en:"old",cn:"老"},
+{en:"hot",cn:"热"},
+{en:"cold",cn:"冷"},
+{en:"cool",cn:"凉爽"},
+{en:"wet",cn:"湿"},
+{en:"dry",cn:"干"},
+{en:"clean",cn:"干净"},
+{en:"dirty",cn:"脏"},
+{en:"soft",cn:"软"},
+{en:"hard",cn:"硬"},
+{en:"run",cn:"跑"},
+{en:"swim",cn:"游泳"},
+{en:"fly",cn:"飞"},
+{en:"walk",cn:"走"},
+{en:"sing",cn:"唱歌"},
+{en:"cry",cn:"哭"},
+{en:"sleep",cn:"睡觉"},
+{en:"eat",cn:"吃"},
+{en:"drink",cn:"喝"},
+{en:"cook",cn:"烹饪"},
+{en:"bake",cn:"烘焙"},
+{en:"wash",cn:"洗"},
+{en:"build",cn:"建造"},
+{en:"write",cn:"写"},
+{en:"read",cn:"读"},
+{en:"listen",cn:"听"},
+{en:"learn",cn:"学习"},
+{en:"teach",cn:"教"},
+{en:"study",cn:"学习"},
+{en:"play",cn:"玩"},
+{en:"work",cn:"工作"},
+{en:"rest",cn:"休息"},
+{en:"travel",cn:"旅行"},
+{en:"explore",cn:"探索"},
+{en:"love",cn:"爱"},
+{en:"hate",cn:"恨"},
+{en:"like",cn:"喜欢"},
+{en:"want",cn:"想要"},
+{en:"need",cn:"需要"},
+{en:"wish",cn:"希望"},
+{en:"remember",cn:"记得"},
+{en:"forget",cn:"忘记"},
+{en:"family",cn:"家庭"},
+{en:"parent",cn:"父母"},
+{en:"mother",cn:"母亲"},
+{en:"father",cn:"父亲"},
+{en:"sister",cn:"姐妹"},
+{en:"brother",cn:"兄弟"},
+{en:"grandparent",cn:"祖父母"},
+{en:"aunt",cn:"阿姨"},
+{en:"cousin",cn:"表亲"},
+{en:"baby",cn:"婴儿"},
+{en:"child",cn:"孩子"},
+{en:"teenager",cn:"青少年"},
+{en:"friend",cn:"朋友"},
+{en:"neighbor",cn:"邻居"},
+{en:"classmate",cn:"同学"},
+{en:"partner",cn:"伙伴"},
+{en:"stranger",cn:"陌生人"},
+{en:"enemy",cn:"敌人"},
+{en:"monday",cn:"周一"},
+{en:"tuesday",cn:"周二"},
+{en:"wednesday",cn:"周三"},
+{en:"thursday",cn:"周四"},
+{en:"friday",cn:"周五"},
+{en:"saturday",cn:"周六"},
+{en:"sunday",cn:"周日"},
+{en:"january",cn:"一月"},
+{en:"february",cn:"二月"},
+{en:"march",cn:"三月"},
+{en:"april",cn:"四月"},
+{en:"may",cn:"五月"},
+{en:"june",cn:"六月"},
+{en:"july",cn:"七月"},
+{en:"august",cn:"八月"},
+{en:"september",cn:"九月"},
+{en:"october",cn:"十月"},
+{en:"november",cn:"十一月"},
+{en:"december",cn:"十二月"},
+{en:"morning",cn:"早晨"},
+{en:"noon",cn:"中午"},
+{en:"evening",cn:"傍晚"},
+{en:"today",cn:"今天"},
+{en:"tomorrow",cn:"明天"},
+{en:"yesterday",cn:"昨天"},
+{en:"china",cn:"中国"},
+{en:"japan",cn:"日本"},
+{en:"korea",cn:"韩国"},
+{en:"india",cn:"印度"},
+{en:"thailand",cn:"泰国"},
+{en:"vietnam",cn:"越南"},
+{en:"russia",cn:"俄罗斯"},
+{en:"france",cn:"法国"},
+{en:"germany",cn:"德国"},
+{en:"italy",cn:"意大利"},
+{en:"spain",cn:"西班牙"},
+{en:"england",cn:"英格兰"},
+{en:"america",cn:"美国"},
+{en:"canada",cn:"加拿大"},
+{en:"brazil",cn:"巴西"},
+{en:"mexico",cn:"墨西哥"},
+{en:"egypt",cn:"埃及"},
+{en:"kenya",cn:"肯尼亚"},
+{en:"australia",cn:"澳大利亚"},
+{en:"zealand",cn:"新西兰"},
+{en:"beijing",cn:"北京"},
+{en:"shanghai",cn:"上海"},
+{en:"tokyo",cn:"东京"},
+{en:"paris",cn:"巴黎"},
+{en:"london",cn:"伦敦"},
+{en:"rome",cn:"罗马"},
+{en:"berlin",cn:"柏林"},
+{en:"moscow",cn:"莫斯科"},
+{en:"sydney",cn:"悉尼"},
+{en:"cairo",cn:"开罗"},
+{en:"great wall",cn:"长城"},
+{en:"eiffel tower",cn:"埃菲尔铁塔"},
+{en:"statue of liberty",cn:"自由女神像"},
+{en:"big ben",cn:"大本钟"},
+{en:"colosseum",cn:"斗兽场"},
+{en:"taj mahal",cn:"泰姬陵"},
+{en:"sydney opera house",cn:"悉尼歌剧院"},
+{en:"mount fuji",cn:"富士山"},
+{en:"niagara falls",cn:"尼亚加拉瀑布"}
 ];
 
-// ===== 存档 =====
-let data=JSON.parse(localStorage.getItem('monster_halloween_v1')||'{}');
-if(!data.coins)data.coins=50;
-if(!data.today)data.today=0;
-if(!data.total)data.total=0;
-if(!data.goal)data.goal=20;
-if(!data.unlocked)data.unlocked=[1];
-if(!data.pity)data.pity=0;
+/* ================= 状态 ================= */
+let state={
+pet:{name:"小火花",level:1,exp:0,hp:100,maxHp:100,energy:80,mood:70,clean:80,sprite:"🐶"},
+coins:0,learnCorrect:0,learnIdx:0,
+bag:{potion:1,candy:1,gift:1},
+friends:[
+{id:"friend001",name:"小星星",level:3,online:true},
+{id:"friend002",name:"英语大王",level:5,online:false},
+{id:"friend003",name:"单词达人",level:2,online:true}
+],
+homeLevel:1,homeItems:["🌸","🪴","💡","",""],
+lastSign:""
+};
 
-function save(){
-localStorage.setItem('monster_halloween_v1',JSON.stringify(data));
-updateUI();
-}
+/* ================= DOM ================= */
+const $=id=>document.getElementById(id);
+function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1800);}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function speak(text){if('speechSynthesis' in window){const u=new SpeechSynthesisUtterance(text);u.lang='en-US';speechSynthesis.speak(u);}}
 
-// ===== UI更新 =====
-function updateUI(){
-document.getElementById('coinDisplay').textContent=data.coins;
-document.getElementById('todayCount').textContent=data.today;
-document.getElementById('goalDisplay').textContent=data.goal;
-document.getElementById('pityDisplay').textContent=data.pity;
-document.getElementById('unlockCount').textContent=data.unlocked.length;
-// 宠物展示
-if(data.unlocked.length>0){
-let pid=data.unlocked[data.unlocked.length-1];
-let p=PETS.find(x=>x.id===pid);
-if(p){
-document.getElementById('mainPet').textContent=p.emoji;
-document.getElementById('petName').textContent=p.name+' ('+p.rarity+')';
+/* ================= 初始化 ================= */
+function init(){
+$("learnTotal").textContent=WORDS.length;
+switchPanel('petPanel');
+updateAll();
+loadLearn(0);
+renderRoom();
+renderShop();
+renderFriends();
+// 衰减
+setInterval(()=>{
+state.pet.energy=Math.max(state.pet.energy-1,0);
+state.pet.mood=Math.max(state.pet.mood-0.5,0);
+state.pet.clean=Math.max(state.pet.clean-0.3,0);
+if(state.pet.energy<10||state.pet.mood<15)state.pet.hp=Math.max(state.pet.hp-1,1);
+updatePet();
+},30000);
 }
-}
-renderDex();
-}
+function updateAll(){updatePet();updateBag();}
 
-// ===== 每日目标 =====
-function setGoal(n){
-data.goal=n;
-save();
-showToast('✅ 目标设为'+n+'词');
+/* ================= 宠物 ================= */
+function updatePet(){
+$("petNameDisplay").textContent=state.pet.name;
+$("petLevel").textContent=state.pet.level;
+$("petHp").textContent=Math.floor(state.pet.hp);
+$("petMaxHp").textContent=state.pet.maxHp;
+$("petEnergy").textContent=Math.floor(state.pet.energy);
+$("petMood").textContent=Math.floor(state.pet.mood);
+$("petClean").textContent=Math.floor(state.pet.clean);
+const need=state.pet.level*100;
+const pct=Math.min(state.pet.exp/need*100,100);
+$("expFill").style.width=pct+"%";
+$("expText").textContent=Math.floor(state.pet.exp)+"/"+need;
+$("coinCount").textContent=state.coins;
+const sp=$("petSprite");
+sp.textContent=state.pet.sprite;
+sp.className="pet-sprite";
+if(state.pet.mood<30||state.pet.clean<30)sp.classList.add("sad");
 }
-
-// ===== 学习逻辑 =====
-let currentWord=WORDS[0];
-
-function nextWord(){
-currentWord=WORDS[Math.floor(Math.random()*WORDS.length)];
-document.getElementById('wordEn').textContent=currentWord.en;
-document.getElementById('wordPh').textContent=currentWord.ph;
-// 生成选项
-let opts=[currentWord.cn];
-while(opts.length<4){
-let r=WORDS[Math.floor(Math.random()*WORDS.length)].cn;
-if(!opts.includes(r))opts.push(r);
+function addExp(n){
+state.pet.exp+=n;
+const need=state.pet.level*100;
+while(state.pet.exp>=need){
+state.pet.exp-=need;
+state.pet.level++;
+state.pet.maxHp+=20;
+state.pet.hp=state.pet.maxHp;
+state.pet.energy=Math.min(state.pet.energy+10,100);
+state.pet.mood=Math.min(state.pet.mood+5,100);
+petSay("🎉 升级啦！现在是 Lv."+state.pet.level);
 }
-opts.sort(()=>Math.random()-0.5);
-document.getElementById('optionsBox').innerHTML=opts.map(o=>'<div class="opt" onclick="checkAnswer(\''+o+'\')">'+o+'</div>').join('');
+updatePet();
 }
-
-function checkAnswer(selected){
-if(selected===currentWord.cn){
-data.coins+=5;
-data.today++;
-data.total++;
-showToast('✅ 正确！+5🪙');
-}else{
-showToast('❌ 答案是：'+currentWord.cn);
+function petSay(t){$("petChat").textContent=t;}
+function petTalk(){speak(state.pet.name+" says hello");petSay("🐾 汪！我们一起加油学英语吧！");const sp=$("petSprite");sp.classList.add("happy");setTimeout(()=>sp.classList.remove("happy"),400);}
+function feedPet(){
+if(state.pet.energy<92){state.pet.energy=Math.min(state.pet.energy+18,100);state.pet.hp=Math.min(state.pet.hp+10,state.pet.maxHp);state.pet.mood=Math.min(state.pet.mood+3,100);petSay("🍽️ 好吃！能量满满～");}
+else petSay("😋 吃饱啦，谢谢～");
+updatePet();
 }
-save();
-setTimeout(nextWord,300);
+function playPet(){
+if(state.pet.energy>=12){state.pet.energy-=12;state.pet.mood=Math.min(state.pet.mood+15,100);petSay("🎾 好开心！再来一次！");addExp(5);}
+else petSay("💤 太累啦，先休息一下吧");
+updatePet();
 }
-
-// ===== 抽卡 =====
-function doGacha(){
-if(data.coins<50){
-showToast('❌ 金币不足！');
-return;
-}
-data.coins-=50;
-data.pity++;
-
-// 计算抽卡结果
-let rand=Math.random();
-let cumulative=0;
-let pick=PETS[0];
-for(let p of PETS){
-cumulative+=p.prob;
-if(rand<cumulative){pick=p;break;}
-}
-
-// 保底
-if(data.pity>=50){
-pick=PETS[Math.floor(Math.random()*PETS.length)];
-data.pity=0;
+function sleepPet(){state.pet.energy=Math.min(state.pet.energy+30,100);state.pet.hp=Math.min(state.pet.hp+20,state.pet.maxHp);petSay("😴 zzz… 睡醒了精神好！");updatePet();}
+function bathePet(){
+if(state.pet.clean>=98){petSay("🛁 已经很干净啦！");return;}
+state.pet.clean=Math.min(state.pet.clean+30,100);state.pet.mood=Math.min(state.pet.mood+5,100);petSay("🧼 洗香香啦～焕然一新！");updatePet();
 }
 
-// 显示转盘
-document.getElementById('slotReels').textContent='🎰 '+pick.emoji+' 🎰';
-
-// 处理结果
-if(!data.unlocked.includes(pick.id)){
-data.unlocked.push(pick.id);
-showToast('🎉 获得新宠物：'+pick.name+'！');
-}else{
-let bonus=Math.floor(Math.random()*10)+5;
-data.coins+=bonus;
-showToast('💕 重复获得'+pick.name+'，返还'+bonus+'🪙');
+/* ================= 家园 ================= */
+const SHOP=[{ic:"🛏️",nm:"小床",pr:50},{ic:"🪟",nm:"窗户",pr:40},{ic:"🖼️",nm:"画框",pr:60},{ic:"🎮",nm:"游戏机",pr:80},{ic:"📚",nm:"书架",pr:70},{ic:"🎵",nm:"音响",pr:90}];
+function renderRoom(){
+const g=$("roomGrid");g.innerHTML="";
+for(let i=0;i<6;i++){
+const slot=document.createElement("div");
+slot.className="room-slot"+(state.homeItems[i]?" filled":"");
+slot.innerHTML=state.homeItems[i]?state.homeItems[i]+'<small>已放</small>':"+<small>空位</small>";
+slot.onclick=()=>{toast("先在下方商店购买家具，再点空位放置");};
+g.appendChild(slot);
 }
-
-save();
-document.getElementById('gachaResult').textContent='✨ 获得：'+pick.name+' '+pick.emoji;
+$("homeLevel").textContent="Lv."+state.homeLevel;
 }
-
-// ===== 图鉴 =====
-function renderDex(){
-let h='';
-PETS.forEach(p=>{
-let owned=data.unlocked.includes(p.id);
-h+='<div style="text-align:center;font-size:12px;background:rgba(255,255,255,0.03);padding:6px;border-radius:8px;border:'+(owned?'1px solid gold':'1px solid rgba(255,255,255,0.1)')+'">'+
-(owned?p.emoji:'❓')+'<br>'+(owned?p.name:'???')+'</div>';
+function renderShop(){
+const s=$("shopItems");s.innerHTML="";
+SHOP.forEach((item,idx)=>{
+const d=document.createElement("div");
+d.className="shop-item";
+d.innerHTML=`<div class="ic">${item.ic}</div><div class="nm">${item.nm}</div><div class="pr">🪙${item.pr}</div><button onclick="buyItem(${idx})">购买</button>`;
+s.appendChild(d);
 });
-document.getElementById('dexGrid').innerHTML=h;
+}
+function buyItem(idx){
+const item=SHOP[idx];
+const empty=state.homeItems.findIndex(x=>!x);
+if(empty===-1){toast("家园已经摆满啦！升级扩大吧");return;}
+if(state.coins<item.pr){toast("金币不够哦～");return;}
+state.coins-=item.pr;
+state.homeItems[empty]=item.ic;
+state.homeLevel=Math.max(state.homeLevel,state.homeItems.filter(x=>x).length);
+toast("购买成功！已放入家园");
+renderRoom();updatePet();
 }
 
-// ===== 导航切换 =====
-function switchTab(tab){
-document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
-event.target.closest('.nav-item').classList.add('active');
-document.getElementById('learnPanel').classList.toggle('hidden',tab!=='learn');
-document.getElementById('gachaPanel').classList.toggle('hidden',tab!=='gacha');
-document.getElementById('dexPanel').classList.toggle('hidden',tab!=='dex');
+/* ================= 战斗-回合制 ================= */
+let battle={mode:"turn",monsterHp:0,monsterMax:0,round:1,answered:false,combo:0,timer:null};
+const MONSTERS=["👹","🐉","👻","💀","🦖","🕷️","🧟","🐲"];
+function startTurnBattle(){
+battle.mode="turn";battle.round=1;battle.combo=0;
+$("comboLine").style.display="none";
+$("battleArea").style.display="block";
+$("battleMsg").textContent="回合制模式：每关一个怪兽，答对即可攻击！";
+spawnMonster();
+}
+function spawnMonster(){
+battle.monsterMax=50+battle.round*20;
+battle.monsterHp=battle.monsterMax;
+battle.answered=false;
+$("battleRound").textContent="第 "+battle.round+" 关";
+$("monsterSprite").textContent=MONSTERS[(battle.round-1)%MONSTERS.length];
+updateMonsterHp();
+loadBattleWord();
+}
+function updateMonsterHp(){
+const pct=Math.max(battle.monsterHp/battle.monsterMax*100,0);
+$("monsterHpFill").style.width=pct+"%";
+}
+function loadBattleWord(){
+const w=WORDS[Math.floor(Math.random()*WORDS.length)];
+battle.word=w;
+$("battleWord").querySelector(".ew").textContent=w.en;
+$("battleWord").querySelector(".cw").textContent="???";
+let opts=[w.cn];
+const pool=WORDS.filter(x=>x.cn!==w.cn).map(x=>x.cn);
+shuffle(pool);
+for(let i=0;i<3&&i<pool.length;i++)opts.push(pool[i]);
+shuffle(opts);
+const c=$("battleOpts");c.innerHTML="";
+opts.forEach(op=>{
+const b=document.createElement("button");
+b.className="battle-opt";b.textContent=op;
+b.onclick=()=>answerBattle(b,op,w.cn);
+c.appendChild(b);
+});
+}
+/* 限时连击 */
+function startComboBattle(){
+battle.mode="combo";battle.combo=0;battle.round=1;
+$("comboLine").style.display="block";
+$("battleArea").style.display="block";
+$("battleMsg").textContent="限时模式：30秒内答对越多，伤害越高！";
+battle.comboHp=100;
+battle.comboTime=30;
+updateCombo();
+loadBattleWord();
+clearInterval(battle.timer);
+battle.timer=setInterval(()=>{
+battle.comboTime--;
+if(battle.comboTime<=0){endCombo();return;}
+updateCombo();
+},1000);
+}
+function updateCombo(){
+$("comboText").textContent="连击 x"+battle.combo+" · 剩余 "+battle.comboTime+"s";
+$("comboHpFill").style.width=Math.max(battle.comboHp,0)+"%";
+}
+function answerCombo(btn,sel,correct){
+if(battle.comboTime<=0)return;
+const btns=$("battleOpts").querySelectorAll(".battle-opt");
+if(sel===correct){
+battle.combo++;
+battle.comboHp=Math.max(battle.comboHp-8,0);
+state.coins+=3;addExp(5);
+state.pet.mood=Math.min(state.pet.mood+1,100);
+toast("连击 x"+battle.combo);
+if(battle.comboHp<=0){battle.comboTime+=5;setTimeout(()=>{battle.comboHp=100;updateCombo();},100);petSay("💥 阶段击破！+5秒");}
+}else{
+battle.combo=Math.max(battle.combo-1,0);
+state.pet.hp=Math.max(state.pet.hp-3,1);
+}
+updateCombo();updatePet();loadBattleWord();
+}
+function endCombo(){
+clearInterval(battle.timer);
+$("battleMsg").textContent="时间到！本次最高连击 x"+battle.combo+"（再战一次？）";
+state.coins+=battle.combo*2;
+state.bag.candy+=Math.floor(battle.combo/5);
+showModal("⏱️","时间到！","本次连击 x"+battle.combo+"，获得 "+(battle.combo*2)+" 金币"+(battle.combo>=5?" 和 "+(Math.floor(battle.combo/5))+" 个糖果":""));
+updatePet();updateBag();
+}
+/* 统一派发：answerBattle 内含回合制逻辑，此处按模式分流 */
+function answerBattle(btn,sel,correct){
+if(battle.mode==="combo")return answerCombo(btn,sel,correct);
+/* turn 模式：直接执行回合制攻击逻辑 */
+if(battle.answered)return;
+battle.answered=true;
+const btns=$("battleOpts").querySelectorAll(".battle-opt");
+btns.forEach(b=>b.disabled=true);
+const ms=$("monsterSprite");
+if(sel===correct){
+btn.classList.add("correct");
+ms.classList.add("hurt");setTimeout(()=>ms.classList.remove("hurt"),200);
+const dmg=15+battle.combo*3;
+battle.monsterHp-=dmg;
+battle.combo++;
+state.coins+=5;addExp(10);
+state.pet.mood=Math.min(state.pet.mood+2,100);
+updateMonsterHp();
+toast("造成 "+dmg+" 伤害！连击 "+battle.combo);
+if(battle.monsterHp<=0){
+battle.round++;
+state.coins+=20;
+state.bag.potion+=1;
+petSay("🎉 怪兽被打倒啦！进入第 "+battle.round+" 关");
+setTimeout(spawnMonster,700);
+}
+}else{
+btn.classList.add("wrong");
+btns.forEach(b=>{if(b.textContent===correct)b.classList.add("correct");});
+battle.combo=0;
+state.pet.hp=Math.max(state.pet.hp-8,1);
+state.pet.mood=Math.max(state.pet.mood-5,0);
+petSay("😵 答错了！宠物受到 8 点伤害");
+}
+updatePet();updateBag();
 }
 
-// ===== Toast提示 =====
-function showToast(msg){
-let el=document.createElement('div');
-el.className='toast';
-el.textContent=msg;
-document.body.appendChild(el);
-setTimeout(()=>el.remove(),1500);
+/* ================= 学习 ================= */
+let learnAnswered=false;
+function loadLearn(i){
+if(i>=WORDS.length)i=0;
+state.learnIdx=i;
+learnAnswered=false;
+const w=WORDS[i];
+$("learnEn").textContent=w.en;
+$("learnCn").textContent="???";
+let opts=[w.cn];
+const pool=WORDS.filter(x=>x.cn!==w.cn).map(x=>x.cn);
+shuffle(pool);
+for(let k=0;k<3&&k<pool.length;k++)opts.push(pool[k]);
+shuffle(opts);
+const c=$("learnOpts");c.innerHTML="";
+opts.forEach(op=>{
+const b=document.createElement("button");
+b.className="learn-opt";b.textContent=op;
+b.onclick=()=>answerLearn(b,op,w.cn);
+c.appendChild(b);
+});
+$("learnIdx").textContent=i+1;
+}
+function answerLearn(btn,sel,correct){
+if(learnAnswered)return;
+learnAnswered=true;
+const btns=$("learnOpts").querySelectorAll(".learn-opt");
+btns.forEach(b=>b.disabled=true);
+if(sel===correct){
+btn.classList.add("correct");
+state.learnCorrect++;
+$("learnCorrect").textContent=state.learnCorrect;
+state.coins+=2;addExp(5);
+state.pet.mood=Math.min(state.pet.mood+2,100);
+petSay("🌟 答对啦！");
+// 掉落
+if(Math.random()<0.25){
+const r=Math.random();
+if(r<0.4){state.bag.potion++;toast("🧪 获得体力药水");}
+else if(r<0.7){state.bag.candy++;toast("🍬 获得经验糖果");}
+else{state.bag.gift++;toast("💝 获得心情礼盒");}
+}
+}else{
+btn.classList.add("wrong");
+btns.forEach(b=>{if(b.textContent===correct)b.classList.add("correct");});
+state.pet.mood=Math.max(state.pet.mood-2,0);
+petSay("😅 别灰心，记住它哦！");
+}
+updatePet();updateBag();
+}
+function nextLearn(){loadLearn(state.learnIdx);}
+
+/* ================= 小游戏-翻翻乐 ================= */
+let mem={cards:[],flipped:[],matched:0,lock:false,score:0};
+function startMemory(){
+const board=$("miniBoard");
+board.className="game-board";
+$("miniHeader").style.display="flex";
+$("miniMsg").textContent="";
+mem.score=0;mem.matched=0;mem.flipped=[];mem.lock=false;
+const pool=shuffle(WORDS.slice()).slice(0,8);
+mem.cards=shuffle([...pool,...pool]);
+board.innerHTML="";
+mem.cards.forEach((w,idx)=>{
+const c=document.createElement("div");
+c.className="mem-card";c.dataset.idx=idx;c.dataset.cn=w.cn;
+c.onclick=()=>flipCard(c);
+board.appendChild(c);
+});
+updateMiniScore();
+}
+function flipCard(c){
+if(mem.lock)return;
+if(c.classList.contains("flipped")||c.classList.contains("matched"))return;
+c.classList.add("flipped");
+mem.flipped.push(c);
+if(mem.flipped.length===2){
+mem.lock=true;
+if(mem.flipped[0].dataset.cn===mem.flipped[1].dataset.cn){
+mem.flipped.forEach(x=>x.classList.add("matched"));
+mem.matched+=2;mem.score+=10;state.coins+=3;addExp(3);
+mem.flipped=[];mem.lock=false;
+speak(mem.flipped[0].dataset.cn);
+updateMiniScore();updatePet();
+if(mem.matched===mem.cards.length){setTimeout(()=>{showModal("🎴","翻翻乐通关！","全部配对成功！获得 30 金币");state.coins+=30;updatePet();exitMini();},300);}
+}else{
+setTimeout(()=>{mem.flipped.forEach(x=>x.classList.remove("flipped"));mem.flipped=[];mem.lock=false;},700);
+}
+}
+}
+/* 消消乐 */
+let mt={cells:[],score:0,timer:null,time:60};
+function startMatch(){
+const board=$("miniBoard");
+board.className="match-board";
+$("miniHeader").style.display="flex";
+$("miniMsg").textContent="";
+mt.score=0;mt.time=60;
+const emojis=["🍎","🐶","⭐","💎","🔥","🌸"];
+mt.cells=[];
+board.innerHTML="";
+for(let i=0;i<36;i++){
+const c=document.createElement("div");
+c.className="match-cell";
+c.dataset.emoji=emojis[Math.floor(Math.random()*emojis.length)];
+c.textContent=c.dataset.emoji;
+c.dataset.idx=i;
+c.onclick=()=>pickMatch(c);
+board.appendChild(c);
+}
+mt.cells=[...board.querySelectorAll(".match-cell")];
+updateMiniScore();
+clearInterval(mt.timer);
+mt.timer=setInterval(()=>{
+mt.time--;
+$("miniTimer").textContent="⏱️"+mt.time+"s";
+if(mt.time<=0){clearInterval(mt.timer);showModal("💎","时间到！","消消乐得分："+mt.score+"（+金币）");state.coins+=mt.score;updatePet();exitMini();}
+},1000);
+}
+function pickMatch(c){
+if(c.classList.contains("cleared"))return;
+if(mt.selected&&mt.selected!==c){
+const a=mt.selected;
+if(a.dataset.emoji===c.dataset.emoji&&Math.abs(a.dataset.idx-c.dataset.idx)===1){
+a.classList.add("cleared");c.classList.add("cleared");
+mt.score+=5;state.coins+=1;addExp(2);
+toast("+5");
+refill();
+}else{a.classList.remove("selected");}
+mt.selected=null;
+}else{mt.selected=c;c.classList.add("selected");}
+updateMiniScore();updatePet();
+}
+function refill(){
+const emojis=["🍎","🐶","⭐","💎","🔥","🌸"];
+mt.cells.filter(c=>!c.classList.contains("cleared")).forEach(c=>{
+c.dataset.emoji=emojis[Math.floor(Math.random()*emojis.length)];
+c.textContent=c.dataset.emoji;
+});
+}
+function updateMiniScore(){$("miniScore").textContent="得分: "+Math.max(mem.score,mt.score);$("miniTimer").textContent="";}
+function exitMini(){
+$("miniBoard").innerHTML="";$("miniHeader").style.display="none";$("miniMsg").textContent="选择上方游戏开始！";
+clearInterval(mt.timer);
 }
 
-// ===== 启动 =====
-updateUI();
-nextWord();
+/* ================= 好友 ================= */
+function renderFriends(){
+const l=$("friendList");l.innerHTML="";
+if(state.friends.length===0){l.innerHTML='<li style="text-align:center;color:#806a54;padding:12px;list-style:none;">暂无好友，去添加吧</li>';return;}
+state.friends.forEach(f=>{
+const li=document.createElement("li");
+li.className="friend-item";
+li.innerHTML=`<span>${f.online?'🟢':'⚫'} ${f.name} · Lv.${f.level}</span><button onclick="visitFriend('${f.id}')">拜访</button>`;
+l.appendChild(li);
+});
+}
+function addFriend(){
+const id=$("friendInput").value.trim();
+if(!id){toast("请输入好友ID");return;}
+state.friends.push({id:id,name:id.slice(0,6),level:1,online:true});
+$("friendInput").value="";
+renderFriends();
+$("giftMsg").textContent="🎉 好友已添加！";
+}
+function visitFriend(id){
+const f=state.friends.find(x=>x.id===id);
+state.coins+=3;
+petSay("🚀 拜访了 "+f.name+"！获得 3 金币");
+if(Math.random()<0.3){state.bag.gift++;toast("🎁 还收到了一份回礼！");}
+updatePet();updateBag();renderFriends();
+}
+function sendGift(){
+const on=state.friends.filter(f=>f.online);
+if(on.length===0){$("giftMsg").textContent="😔 没有在线好友";return;}
+if(state.bag.gift<=0){$("giftMsg").textContent="💔 心情礼盒不足，去做题获取";return;}
+const t=on[Math.floor(Math.random()*on.length)];
+state.bag.gift--;
+state.coins+=8;
+state.pet.mood=Math.min(state.pet.mood+8,100);
+$("giftMsg").textContent="✅ 送给 "+t.name+" 一份礼物！TA回赠了金币";
+petSay("🎁 送给 "+t.name+" 礼物，TA很开心～");
+updatePet();updateBag();
+}
+
+/* ================= 背包 ================= */
+function updateBag(){
+$("bagPotion").textContent="×"+state.bag.potion;
+$("bagCandy").textContent="×"+state.bag.candy;
+$("bagGift").textContent="×"+state.bag.gift;
+}
+function useItem(){
+if(state.bag.potion>0){state.bag.potion--;state.pet.energy=Math.min(state.pet.energy+25,100);state.pet.hp=Math.min(state.pet.hp+15,state.pet.maxHp);petSay("🧪 用了体力药水！状态恢复");}
+else if(state.bag.candy>0){state.bag.candy--;addExp(30);petSay("🍬 经验糖果让宠物飞速成长！");}
+else if(state.bag.gift>0){state.bag.gift--;state.pet.mood=Math.min(state.pet.mood+25,100);petSay("💝 心情礼盒让宠物超开心！");}
+else{toast("背包空啦，去做题获取道具吧");}
+updatePet();updateBag();
+}
+
+/* ================= 签到 ================= */
+function claimDaily(){
+const today=new Date().toISOString().slice(0,10);
+if(state.lastSign===today){toast("今天已经签过啦～");return;}
+state.lastSign=today;
+state.coins+=10;
+state.bag.potion++;state.bag.candy++;
+state.pet.mood=Math.min(state.pet.mood+10,100);
+petSay("📅 签到成功！+10金币 +药水 +糖果");
+showModal("📅","签到成功！","获得 10 金币、1 体力药水、1 经验糖果");
+updatePet();updateBag();
+}
+
+/* ================= 弹窗/面板 ================= */
+function showModal(icon,title,text){
+$("modalIcon").textContent=icon;
+$("modalTitle").textContent=title;
+$("modalText").textContent=text;
+$("modal").classList.add("show");
+}
+function closeModal(){$("modal").classList.remove("show");}
+function switchPanel(id){
+document.querySelectorAll(".nav-tab").forEach(t=>t.classList.remove("active"));
+document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active-panel"));
+document.querySelector(`.nav-tab[data-panel="${id}"]`).classList.add("active");
+$(id).classList.add("active-panel");
+}
+document.querySelectorAll(".nav-tab").forEach(t=>{
+t.addEventListener("click",()=>switchPanel(t.dataset.panel));
+});
+
+/* 启动 */
+init();
 </script>
 </body>
 </html>
